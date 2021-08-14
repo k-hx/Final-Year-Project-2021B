@@ -30,3 +30,7 @@
             protected $fillable=['xxx','xxxxx']
 
    iv. Migrate migration file
+
+9. i. Create route (if add or edit data -> one route for displaying the page, one to add/edit)
+   ii. Create view
+   iii. Create controller
