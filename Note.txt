@@ -9,5 +9,24 @@
 
 5. Add authentication UI
       php artisan ui vue --auth
+      npm update
       npm install
       npm run dev
+      (npm run dev)
+
+6. Migrate database table, move out the migration file to another folder
+      php artisan migrate
+
+7. Create "images" folder in public folder
+
+8.
+   i. Create model with migration file
+            php artisan make:model EntityName -m
+
+   ii. Edit migration file
+            $table->string('name');
+
+   iii. Edit model file
+            protected $fillable=['xxx','xxxxx']
+
+   iv. Migrate migration file
