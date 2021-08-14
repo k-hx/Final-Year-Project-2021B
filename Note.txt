@@ -1,1 +1,13 @@
 1. Create project
+
+2. change directory to the project
+
+3. Create database, change database name in .env file
+
+4. Get UI
+      composer require laravel/ui
+
+5. Add authentication UI
+      php artisan ui vue --auth
+      npm install
+      npm run dev
