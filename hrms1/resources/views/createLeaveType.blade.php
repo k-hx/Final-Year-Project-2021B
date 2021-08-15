@@ -9,6 +9,11 @@
       </p>
 
       <p>
+         <label for="min_num_of_days" class="label">Minimum Number of Days</label>
+         <input type="number" name="min_num_of_days" id="min_num_of_days">
+      </p>
+
+      <p>
          <input type="submit" name="create" value="Create">
       </p>
    </form>

@@ -2,17 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -24,4 +13,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // create leave type -----------------------------------------------------------
 Route::get('createLeaveType', function() {
    return view('createLeaveType');
-});
+})->middleware('auth');
+
+Route::post('createLeaveType/store', [App\Http\Controllers\LeaveTypeController::class, 'store'])->name('addLeaveType');
+
+// display leave types -----------------------------------------------------------
+Route::get('leaveTypes', [App\Http\Controllers\LeaveTypeController::class, 'show'])->name('showLeaveTypes');
