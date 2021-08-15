@@ -24,4 +24,28 @@ class LeaveTypeController extends Controller
       $leaveTypes=LeaveType::all();
       return view('showLeaveTypes')->with('leaveTypes',$leaveTypes);
    }
+
+   public function edit($id) {
+      $leaveTypes=LeaveType::all()->where('id',$id);
+
+      return view('editLeaveType')->with('leaveTypes',$leaveTypes);
+   }
+
+   public function update() {
+      $r=request();
+      $leaveTypes=LeaveType::find($r->id);
+
+      $leaveTypes->name=$r->name;
+      $leaveTypes->min_num_of_days=$r->min_num_of_days;
+      $leaveTypes->save();
+
+      Session::flash('success',"Leave type updated successfully!");
+      return redirect()->route('showLeaveTypes');
+   }
+
+   public function delete($id) {
+      $leaveTypes=LeaveType::find($id);
+      $leaveTypes->delete();
+      return redirect()->route('showLeaveTypes');
+   }
 }

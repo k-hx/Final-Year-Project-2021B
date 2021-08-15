@@ -19,10 +19,12 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">HRMS
-            <button type="button" id="sidebarCollapse" class="btn btn-info" style="margin-left: 120%;">
-                <i class="fas fa-bars"></i>
-            </button></a>
+           <a class="navbar-brand" href="#">
+             <button type="button" id="sidebarCollapse" class="btn btn-info">
+               <i class="fas fa-bars"></i>
+             </button>
+             HRMS
+           </a>
 
             <ul class="navbar-nav">
                 @guest
