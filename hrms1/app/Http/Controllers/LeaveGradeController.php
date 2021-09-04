@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Models\LeaveType;
+use App\Models\LeaveGrade;
 use Session;
 
 class LeaveGradeController extends Controller
 {
    public function __construct() {
         $this->middleware('auth');
-   }
-
-   public function showCreatePage() {
-      return view('createLeaveGrade')->with('leaveTypes',LeaveType::all());
    }
 
     public function store() {
@@ -27,17 +23,30 @@ class LeaveGradeController extends Controller
       return redirect()->route('showLeaveGrades');
    }
 
-   public function addLeaveEntitlements() {
-      $r=request();
-      $addLeaveEntitlements=LeaveEntitlements::create([
-         'leaveGrade'=>$r->leaveGrade,
-         'leaveType'=>$r->leaveType,
-         'num_of_days'=>$r->num_of_days,
-      ]);
+   public function show() {
+      $leaveGrades=LeaveGrade::all();
+      return view('showLeaveGrades')->with('leaveGrades',$leaveGrades);
+   }
 
-      Session::flash('success',"Leave entitlement added successfully!");
+   public function edit($id) {
+      $leaveGrades=LeaveGrade::all()->where('id',$id);
+      return view('editLeaveGradeName')->with('leaveGrades',$leaveGrades);
+   }
+
+   public function update() {
+      $r=request();
+      $leaveGrades=LeaveGrade::find($r->id);
+
+      $leaveGrades->name=$r->name;
+      $leaveGrades->save();
+
+      Session::flash('success',"Leave grade updated successfully!");
       return redirect()->route('showLeaveGrades');
    }
 
-
+   public function delete($id) {
+      $leaveGrades=LeaveGrade::find($id);
+      $leaveGrades->delete();
+      return redirect()->route('showLeaveGrades');
+   }
 }

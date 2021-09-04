@@ -28,6 +28,7 @@
          <td><a href="{{ route('editLeaveType', ['id' => $leaveType->id]) }}" class="btn btn-warning" >Edit</a><a href="{{ route('deleteLeaveType', ['id' => $leaveType->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$leaveType->name}}?')">Delete</a></td>
       </tr>
       @endforeach
+      
    </table>
 </div>
 @endsection

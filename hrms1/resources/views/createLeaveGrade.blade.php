@@ -8,15 +8,6 @@
          <input type="text" name="name" id="name">
       </p>
 
-
-      <!--Edit here-->
-      @foreach($leaveTypes as $leaveType)
-      <p>
-         <label for="{{ $leaveType->name }}" class="label">{{ $leaveType->name }}</label>
-         <input type="number" name="{{ $leaveType->name }}" id="{{ $leaveType->name }}">
-      </p>
-      @endforeach
-
       <p>
          <input type="submit" name="create" value="Create">
       </p>

@@ -8,6 +8,7 @@
          <input type="text" name="name" id="name">
       </p>
 
+      <p>{{ $id }}</p>
 
       <!--Edit here-->
       @foreach($leaveTypes as $leaveType)
