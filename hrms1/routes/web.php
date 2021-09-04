@@ -36,7 +36,7 @@ Route::get('createLeaveGrade', function () {
 Route::post('createLeaveGrade/store', [App\Http\Controllers\LeaveGradeController::class, 'store'])->name('addLeaveGrade');
 
 // show leave grade -----------------------------------------------------------
-Route::get('showLeaveGrades', [App\Http\Controllers\LeaveGradeController::class, 'show'])->name('showLeaveGrades');
+Route::get('leaveGrades', [App\Http\Controllers\LeaveGradeController::class, 'show'])->name('showLeaveGrades');
 
 
 // edit leave grade name -----------------------------------------------------------

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\LeaveType;
+use App\Models\LeaveGrade;
+use App\Models\LeaveEntitlement;
 use Session;
 
 class LeaveEntitlementController extends Controller
@@ -14,9 +16,11 @@ class LeaveEntitlementController extends Controller
    }
 
    public function show($id) {
+      $leaveGrades=LeaveGrade::all()->where('id',$id);
       $currentEntitlements=LeaveEntitlement::all()->where('leaveGrade',$id);
-
-      return view('editLeaveGrade')->with('leaveTypes',LeaveType::all());
+      return view('editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
+                                          ->with('currentEntitlements',$currentEntitlements)
+                                          ->with('leaveTypes',LeaveType::all());
    }
 
    public function addLeaveEntitlement($id) {
