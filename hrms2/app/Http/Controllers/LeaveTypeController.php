@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\LeaveType;
 use Session;
-use App\Http\Controllers\Schema;
 
 class LeaveTypeController extends Controller
 {
@@ -16,11 +15,6 @@ class LeaveTypeController extends Controller
          'name'=>$r->name,
          'min_num_of_days'=>$r->min_num_of_days,
       ]);
-
-      $addSchema::table('leave_grades', function($table)
-      {
-          $table->string('id');
-      });
 
       Session::flash('success',"Leave type created successfully!");
       return redirect()->route('showLeaveTypes');
