@@ -25,7 +25,7 @@
          <td>{{$leaveGrade->name}}</td>
          <td>
             <a href="{{ route('editLeaveGradeName', ['id' => $leaveGrade->id]) }}" class="btn btn-warning" >Edit Leave Grade Name</a>
-            <a href="#" class="btn btn-info" >Edit Leave Leave Entitlement</a>
+            <a href="{{ route('editLeaveEntitlement', ['id' => $leaveGrade->id]) }}" class="btn btn-info" >Edit Leave Leave Entitlement</a>
             <a href="{{ route('deleteLeaveGrade', ['id' => $leaveGrade->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$leaveGrade->name}}?')">Delete</a>
          </td>
       </tr>
