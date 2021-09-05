@@ -16,6 +16,7 @@
          <label for="name" class="label">Leave Type Name</label>
          <input type="text" name="name" id="name" value="{{ $leaveGrade->name}}">
       </p>
+
       @endforeach
 
       <p>

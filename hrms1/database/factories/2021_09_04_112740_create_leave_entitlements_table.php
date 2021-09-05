@@ -17,7 +17,7 @@ class CreateLeaveEntitlementsTable extends Migration
             $table->id();
             $table->string('leaveGrade');
             $table->string('leaveType');
-            $table->integer('num_of_days');
+            $table->unsignedInteger('num_of_days');
             $table->timestamps();
         });
     }

@@ -17,16 +17,23 @@ class LeaveEntitlementController extends Controller
 
    public function show($id) {
       $leaveGrades=LeaveGrade::all()->where('id',$id);
-      $currentEntitlements=LeaveEntitlement::all()->where('leaveGrade',$id);
-      return view('editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
+      // $currentEntitlements=LeaveEntitlement::all()->where('leaveGrade',$id);
+
+      $currentEntitlements=DB::table('leave_entitlements')
+                           ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
+                           ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+                           ->where('leave_entitlements.leaveGrade','=',$id)
+                           ->get();
+
+      return view('leaveEntitlement')->with('leaveGrades',$leaveGrades)
                                           ->with('currentEntitlements',$currentEntitlements)
                                           ->with('leaveTypes',LeaveType::all());
    }
 
-   public function addLeaveEntitlement($id) {
+   public function addLeaveEntitlement() {
       $r=request();
       $addLeaveEntitlements=LeaveEntitlement::create([
-         'leaveGrade'=>$r->$id,
+         'leaveGrade'=>$r->id,
          'leaveType'=>$r->leaveType,
          'num_of_days'=>$r->num_of_days,
       ]);
