@@ -17,7 +17,6 @@ class LeaveEntitlementController extends Controller
 
    public function show($id) {
       $leaveGrades=LeaveGrade::all()->where('id',$id);
-      // $currentEntitlements=LeaveEntitlement::all()->where('leaveGrade',$id);
 
       $currentEntitlements=DB::table('leave_entitlements')
                            ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
