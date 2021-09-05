@@ -88,4 +88,12 @@ class LeaveApplicationController extends Controller
 
       return redirect()->route('showLeaveApplicationListAdmin');
    }
+
+
+   public function cancel($id) {
+      $leaveApplications=LeaveApplication::find($id);
+      $leaveApplications->delete();
+
+      return redirect()->route('showLeaveApplicationList');
+   }
 }

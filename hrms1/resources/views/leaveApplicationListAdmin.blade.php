@@ -39,17 +39,11 @@
          <td>
             @if ($leaveApplication->status !== 'Leave Taken')
                @if ($leaveApplication->status !== 'Approved')
-               <form class="" action="{{ route('approveLeave', ['id' => $leaveApplication->id]) }}" method="post">
-                  @csrf
                   <input type="submit" name="approve" value="Approve" class="btn btn-success">
-               </form>
                @endif
 
                @if ($leaveApplication->status !== 'Rejected')
-               <form class="" action="{{ route('rejectLeave', ['id' => $leaveApplication->id]) }}" method="post">
-                  @csrf
-                  <input type="submit" name="reject" value="Reject" class="btn btn-warning">
-               </form>
+               <input type="submit" name="reject" value="Reject" class="btn btn-warning">
                @endif
             @endif
          </td>

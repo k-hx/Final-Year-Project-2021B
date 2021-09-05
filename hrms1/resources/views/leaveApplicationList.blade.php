@@ -39,7 +39,7 @@
          </td>
          <td>
             @if ($leaveApplication->status !== 'Leave Taken')
-            <a href="#" class="btn btn-danger">Cancel</a>
+            <a href="{{ route('cancelLeave', ['id' => $leaveApplication->id])}}" class="btn btn-danger">Cancel</a>
             @endif
          </td>
 

@@ -60,8 +60,11 @@ Route::get('leaveApplicationList', [App\Http\Controllers\LeaveApplicationControl
 // leave application list admin -----------------------------------------------------------
 Route::get('admin/leaveApplicationList', [App\Http\Controllers\LeaveApplicationController::class, 'showLeaveApplicationListAdmin'])->name('showLeaveApplicationListAdmin');
 
-// approve leave
-Route::post('admin/approveLeave/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'approve'])->name('approveLeave');
+// approve leave -----------------------------------------------------------
+Route::get('admin/approveLeave/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'approve'])->name('approveLeave');
 
-// reject leave
-Route::post('admin/reject/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');
+// reject leave -----------------------------------------------------------
+Route::get('admin/reject/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');
+
+// cancel leave -----------------------------------------------------------
+Route::get('leaveApplication/cancel/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
