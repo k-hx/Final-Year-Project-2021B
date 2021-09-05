@@ -30,7 +30,7 @@ class LeaveEntitlementController extends Controller
                                           ->with('leaveTypes',LeaveType::all());
    }
 
-   public function addLeaveEntitlement() {
+   public function addLeaveEntitlement($id) {
       $r=request();
       $addLeaveEntitlements=LeaveEntitlement::create([
          'leaveGrade'=>$r->id,
@@ -39,6 +39,6 @@ class LeaveEntitlementController extends Controller
       ]);
 
       Session::flash('success',"Leave entitlement added successfully!");
-      return redirect()->route('showLeaveGrades');
+      return redirect()->route('leaveEntitlement', ['id' => $id]);
    }
 }

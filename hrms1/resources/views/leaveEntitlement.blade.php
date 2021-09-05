@@ -35,7 +35,7 @@
       <input type="hidden" name="id" value="{{ $leaveGrade->id }}">
       <p>
          <label for="leavesEntitled">Leave Type: </label>
-         <select name= "leaveType" id= "leaveType" class="form-control">
+         <select name= "leaveType" id= "leaveType" class="form-control" required>
             @foreach($leaveTypes as $leaveType)
 
                @php $added = 0; @endphp
@@ -45,9 +45,11 @@
                   @endif
                @endforeach
 
+
                @if($added==0)
                <option value="{{ $leaveType->id }}">{{ $leaveType->name }}</option>
                @endif
+
 
             @endforeach
          </select>
