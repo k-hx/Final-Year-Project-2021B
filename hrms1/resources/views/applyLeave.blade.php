@@ -14,8 +14,18 @@
       <input type="hidden" name="leaveApprover" value="{{ $employee->supervisor}}">
 
       <p>
-         <label for="min_num_of_days" class="label">Minimum Number of Days</label>
-         <input type="number" name="min_num_of_days" id="min_num_of_days">
+         <label for="startDateTime" class="label">Start date time</label>
+         <input type="datetime-local" name="startDateTime" id="startDateTime">
+      </p>
+
+      <p>
+         <label for="endDateTime" class="label">End date time</label>
+         <input type="datetime-local" name="endDateTime" id="endDateTime">
+      </p>
+
+      <p>
+         <label for="reason" class="label">Reason</label>
+         <textarea name="reason" rows="8" cols="20"></textarea>
       </p>
 
       <p>

@@ -36,7 +36,6 @@ Route::post('createLeaveGrade/store', [App\Http\Controllers\LeaveGradeController
 // show leave grade -----------------------------------------------------------
 Route::get('leaveGrades', [App\Http\Controllers\LeaveGradeController::class, 'show'])->name('showLeaveGrades');
 
-
 // edit leave grade name -----------------------------------------------------------
 Route::get('leaveGrade/editLeaveGradeName/{id}', [App\Http\Controllers\LeaveGradeController::class, 'edit'])->name('editLeaveGradeName');
 
@@ -49,3 +48,6 @@ Route::get('leaveGrade/delete/{id}', [App\Http\Controllers\LeaveGradeController:
 Route::get('leaveGrade/leaveEntitlement/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'show'])->name('leaveEntitlement');
 
 Route::post('leaveGrade/leaveEntitlement/{id}/add', [App\Http\Controllers\LeaveEntitlementController::class, 'addLeaveEntitlement'])->name('addLeaveEntitlement');
+
+// apply leave -----------------------------------------------------------
+Route::get('applyLeave', [App\Http\Controllers\LeaveApplicationController::class, 'show'])->name('applyLeave');
