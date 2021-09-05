@@ -50,4 +50,18 @@ Route::get('leaveGrade/leaveEntitlement/{id}', [App\Http\Controllers\LeaveEntitl
 Route::post('leaveGrade/leaveEntitlement/{id}/add', [App\Http\Controllers\LeaveEntitlementController::class, 'addLeaveEntitlement'])->name('addLeaveEntitlement');
 
 // apply leave -----------------------------------------------------------
-Route::get('applyLeave', [App\Http\Controllers\LeaveApplicationController::class, 'show'])->name('applyLeave');
+Route::get('applyLeave', [App\Http\Controllers\LeaveApplicationController::class, 'showApplyLeavePage'])->name('showApplyLeavePage');
+
+Route::post('applyLeave/submit', [App\Http\Controllers\LeaveApplicationController::class, 'submitApplication'])->name('submitApplication');
+
+// leave application list -----------------------------------------------------------
+Route::get('leaveApplicationList', [App\Http\Controllers\LeaveApplicationController::class, 'showLeaveApplicationList'])->name('showLeaveApplicationList');
+
+// leave application list admin -----------------------------------------------------------
+Route::get('admin/leaveApplicationList', [App\Http\Controllers\LeaveApplicationController::class, 'showLeaveApplicationListAdmin'])->name('showLeaveApplicationListAdmin');
+
+// approve leave
+Route::post('admin/approveLeave/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'approve'])->name('approveLeave');
+
+// reject leave
+Route::post('admin/reject/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');

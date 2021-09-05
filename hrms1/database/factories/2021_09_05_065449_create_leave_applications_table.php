@@ -20,7 +20,7 @@ class CreateLeaveApplicationsTable extends Migration
             $table->dateTime('start_date_time');
             $table->dateTime('end_date_time');
             $table->string('reason');
-            $table->string('file');
+            $table->string('document');
             $table->string('status');
             $table->string('leave_approver');
             $table->timestamps();
