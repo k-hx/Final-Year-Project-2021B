@@ -40,4 +40,41 @@ class LeaveEntitlementController extends Controller
       Session::flash('success',"Leave entitlement added successfully!");
       return redirect()->route('leaveEntitlement', ['id' => $id]);
    }
+
+   public function edit($leaveGradeId,$id) {
+      $currentEntitlements=DB::table('leave_entitlements')
+                           ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
+                           ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+                           ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
+                           ->get();
+
+      $leaveEntitlements=DB::table('leave_entitlements')
+                        ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
+                        ->select('leave_types.name as leaveTypeName','leave_entitlements.*')
+                        ->where('leave_entitlements.id','=',$id)
+                        ->get();
+
+      return view('editLeaveEntitlement')->with('leaveEntitlements',$leaveEntitlements)
+                                          ->with('currentEntitlements',$currentEntitlements)
+                                         ->with('leaveTypes',LeaveType::all());
+   }
+
+   public function updateLeaveEntitlement($id) {
+      $r=request();
+      $leaveEntitlements=LeaveEntitlement::find($id);
+
+      $leaveEntitlements->leaveType=$r->leaveType;
+      $leaveEntitlements->num_of_days=$r->num_of_days;
+      $leaveEntitlements->save();
+
+      Session::flash('success',"Leave entitlement updated successfully!");
+      return redirect()->route('leaveEntitlement');
+   }
+
+   public function deleteLeaveEntitlement($id) {
+      $leaveEntitlements=LeaveEntitlement::find($id);
+      $leaveEntitlements->delete();
+
+      return redirect()->route('leaveEntitlement');
+   }
 }

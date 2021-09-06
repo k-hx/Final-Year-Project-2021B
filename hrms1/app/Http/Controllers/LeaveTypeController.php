@@ -49,6 +49,10 @@ class LeaveTypeController extends Controller
    public function delete($id) {
       $leaveTypes=LeaveType::find($id);
       $leaveTypes->delete();
+
+      $leaveEntitlements=LeaveEntitlements::all()->where('leaveType',$id);
+      $leaveEntitlements->delete();
+
       return redirect()->route('showLeaveTypes');
    }
 }

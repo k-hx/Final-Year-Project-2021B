@@ -20,8 +20,8 @@
             <td>{{ $currentEntitlement->leaveTypeName }}</td>
             <td>{{ $currentEntitlement->num_of_days }}</td>
             <td>
-               <a href="#" class="btn btn-warning" >Edit</a>
-               <a href="#" class="btn btn-danger" onclick="return confirm('Delete {{$leaveGrade->name}}?')">Delete</a>
+               <a href="{{ route('editLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-warning" >Edit</a>
+               <a href="{{ route('deleteLeaveEntitlement', ['id' => $currentEntitlement->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentEntitlement->leaveTypeName}}?')">Delete</a>
          </td>
          </tr>
          @endforeach

@@ -44,10 +44,16 @@ Route::post('leaveGrade/updateLeaveGradeName', [App\Http\Controllers\LeaveGradeC
 // delete leave grade -----------------------------------------------------------
 Route::get('leaveGrade/delete/{id}', [App\Http\Controllers\LeaveGradeController::class, 'delete'])->name('deleteLeaveGrade');
 
-// edit leave entitlement -----------------------------------------------------------
+// show leave entitlement of a leave grade -----------------------------------------------------------
 Route::get('leaveGrade/leaveEntitlement/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'show'])->name('leaveEntitlement');
 
 Route::post('leaveGrade/leaveEntitlement/{id}/add', [App\Http\Controllers\LeaveEntitlementController::class, 'addLeaveEntitlement'])->name('addLeaveEntitlement');
+
+// edit a leave entitlement -----------------------------------------------------------
+Route::get('leaveGrade/editLeaveEntitlement/{leaveGradeId}/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'edit'])->name('editLeaveEntitlement');
+
+// delete a leave entitlement -----------------------------------------------------------
+Route::get('leaveGrade/deleteLeaveEntitlement/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'deleteLeaveEntitlement'])->name('deleteLeaveEntitlement');
 
 // apply leave -----------------------------------------------------------
 Route::get('applyLeave', [App\Http\Controllers\LeaveApplicationController::class, 'showApplyLeavePage'])->name('showApplyLeavePage');

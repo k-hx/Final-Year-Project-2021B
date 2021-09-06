@@ -6,7 +6,6 @@
 <div style="text-align:center">
    <form method="post" action="{{ route('updateLeaveType') }}" enctype="multipart/form-data">
       @csrf
-
       @foreach($leaveTypes as $leaveType)
       <p>
          <label for="id" class="label">ID</label>
