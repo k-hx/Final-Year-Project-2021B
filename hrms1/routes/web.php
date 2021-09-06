@@ -52,8 +52,10 @@ Route::post('leaveGrade/leaveEntitlement/{id}/add', [App\Http\Controllers\LeaveE
 // edit a leave entitlement -----------------------------------------------------------
 Route::get('leaveGrade/editLeaveEntitlement/{leaveGradeId}/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'edit'])->name('editLeaveEntitlement');
 
+Route::post('leaveGrade/leaveEntitlement/edit/{leaveGradeId}/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'updateLeaveEntitlement'])->name('updateLeaveEntitlement');
+
 // delete a leave entitlement -----------------------------------------------------------
-Route::get('leaveGrade/deleteLeaveEntitlement/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'deleteLeaveEntitlement'])->name('deleteLeaveEntitlement');
+Route::get('leaveGrade/deleteLeaveEntitlement/{leaveGradeId}/{id}', [App\Http\Controllers\LeaveEntitlementController::class, 'deleteLeaveEntitlement'])->name('deleteLeaveEntitlement');
 
 // apply leave -----------------------------------------------------------
 Route::get('applyLeave', [App\Http\Controllers\LeaveApplicationController::class, 'showApplyLeavePage'])->name('showApplyLeavePage');

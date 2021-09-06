@@ -21,7 +21,7 @@
             <td>{{ $currentEntitlement->num_of_days }}</td>
             <td>
                <a href="{{ route('editLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-warning" >Edit</a>
-               <a href="{{ route('deleteLeaveEntitlement', ['id' => $currentEntitlement->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentEntitlement->leaveTypeName}}?')">Delete</a>
+               <a href="{{ route('deleteLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentEntitlement->leaveTypeName}}?')">Delete</a>
          </td>
          </tr>
          @endforeach
@@ -57,7 +57,7 @@
          <br>
 
          <label for="num_of_days">Number of days entitled:</label>
-         <input type="number" name="num_of_days" value="" required>
+         <input type="number" name="num_of_days" min="0" value="" required>
       </p>
 
       <input type="submit" name="addLeaveType" value="Add leave type" class="btn btn-info">

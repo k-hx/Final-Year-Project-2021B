@@ -42,6 +42,8 @@ class LeaveEntitlementController extends Controller
    }
 
    public function edit($leaveGradeId,$id) {
+      $leaveGrades=LeaveGrade::all()->where('id',$leaveGradeId);
+
       $currentEntitlements=DB::table('leave_entitlements')
                            ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
                            ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
@@ -54,12 +56,13 @@ class LeaveEntitlementController extends Controller
                         ->where('leave_entitlements.id','=',$id)
                         ->get();
 
-      return view('editLeaveEntitlement')->with('leaveEntitlements',$leaveEntitlements)
+      return view('editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
+                                          ->with('leaveEntitlements',$leaveEntitlements)
                                           ->with('currentEntitlements',$currentEntitlements)
                                          ->with('leaveTypes',LeaveType::all());
    }
 
-   public function updateLeaveEntitlement($id) {
+   public function updateLeaveEntitlement($leaveGradeId,$id) {
       $r=request();
       $leaveEntitlements=LeaveEntitlement::find($id);
 
@@ -68,13 +71,13 @@ class LeaveEntitlementController extends Controller
       $leaveEntitlements->save();
 
       Session::flash('success',"Leave entitlement updated successfully!");
-      return redirect()->route('leaveEntitlement');
+      return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
    }
 
-   public function deleteLeaveEntitlement($id) {
+   public function deleteLeaveEntitlement($leaveGradeId,$id) {
       $leaveEntitlements=LeaveEntitlement::find($id);
       $leaveEntitlements->delete();
 
-      return redirect()->route('leaveEntitlement');
+      return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
    }
 }

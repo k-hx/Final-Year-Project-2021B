@@ -3,15 +3,19 @@
 <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
 
 @section('content')
+
+@foreach($leaveGrades as $leaveGrade)
+<a href="{{ route('leaveEntitlement', ['id' => $leaveGrade->id]) }}" class="btn btn-info">Back</a>
+
 <div style="text-align:center">
 
    @foreach($leaveEntitlements as $leaveEntitlement)
-   <form action="{{ route('editLeaveEntitlement', ['id' => $leaveEntitlement->id]) }}" method="post">
+   <form action="{{ route('updateLeaveEntitlement', ['leaveGradeId'=>$leaveGrade->id,'id' => $leaveEntitlement->id]) }}" method="post">
       @csrf
       <p>
          <label for="leavesEntitled">Leave Type: </label>
          <select name= "leaveType" id= "leaveType" class="form-control" required>
-            <option value="{{ $leaveEntitlement->id}}" selected>{{ $leaveEntitlement->leaveTypeName }}</option>
+            <option name= "leaveType" value="{{ $leaveEntitlement->leaveType}}">{{ $leaveEntitlement->leaveTypeName }}</option>
 
             @foreach($leaveTypes as $leaveType)
                @php $added = 0; @endphp
@@ -22,7 +26,7 @@
                @endforeach
 
                @if($added==0)
-               <option value="{{ $leaveType->id }}">{{ $leaveType->name }}</option>
+               <option name= "leaveType" value="{{ $leaveType->id }}">{{ $leaveType->name }}</option>
                @endif
             @endforeach
          </select>
@@ -30,11 +34,12 @@
          <br>
 
          <label for="num_of_days">Number of days entitled:</label>
-         <input type="number" name="num_of_days" value="{{ $leaveEntitlement->num_of_days }}" required>
+         <input type="number" name="num_of_days" min="0" value="{{ $leaveEntitlement->num_of_days }}" required>
       </p>
 
-      <input type="submit" name="updateLeaveEntitlement" value="Update" class="btn btn-info">
+      <input type="submit" name="updateLeaveEntitlement" value="Update" class="btn btn-primary">
    </form>
    @endforeach
+@endforeach
 </div>
 @endsection
