@@ -32,7 +32,7 @@
          <td>{{ $leaveApplication->reason }}</td>
          <td>
             @if ($leaveApplication->document != '')
-            <a href="{{ asset('documents/') }}/{{$leaveApplication->document}}" class="link">File</a>
+            <a href="{{ asset('documents/') }}/{{$leaveApplication->document}}" class="link" target="_blank">File</a>
             @else
             -
             @endif

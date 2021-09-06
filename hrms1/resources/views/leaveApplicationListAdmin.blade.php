@@ -31,7 +31,7 @@
          <td>{{ $leaveApplication->reason }}</td>
          <td>
             @if ($leaveApplication->document != '')
-            <a href="{{ asset('documents/') }}/{{$leaveApplication->document}}" class="link">File</a>
+            <a href="{{ asset('documents/') }}/{{$leaveApplication->document}}" class="link" target="_blank">File</a>
             @else
             -
             @endif
@@ -39,11 +39,11 @@
          <td>
             @if ($leaveApplication->status !== 'Leave Taken')
                @if ($leaveApplication->status !== 'Approved')
-                  <input type="submit" name="approve" value="Approve" class="btn btn-success">
+               <a href="{{ route('approveLeave', ['id' => $leaveApplication->id]) }}" class="btn btn-success" >Approve</a>
                @endif
 
                @if ($leaveApplication->status !== 'Rejected')
-               <input type="submit" name="reject" value="Reject" class="btn btn-warning">
+               <a href="{{ route('rejectLeave', ['id' => $leaveApplication->id]) }}" class="btn btn-warning" >Reject</a>
                @endif
             @endif
          </td>
