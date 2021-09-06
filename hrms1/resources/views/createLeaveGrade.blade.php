@@ -5,7 +5,7 @@
       @csrf
       <p>
          <label for="name" class="label">Leave Grade Name</label>
-         <input type="text" name="name" id="name">
+         <input type="text" name="name" id="name" required>
       </p>
 
       <p>

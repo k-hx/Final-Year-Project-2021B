@@ -92,7 +92,8 @@ class LeaveApplicationController extends Controller
 
    public function cancel($id) {
       $leaveApplications=LeaveApplication::find($id);
-      $leaveApplications->delete();
+      $leaveApplications->status='Cancelled';
+      $leaveApplications->save();
 
       return redirect()->route('showLeaveApplicationList');
    }

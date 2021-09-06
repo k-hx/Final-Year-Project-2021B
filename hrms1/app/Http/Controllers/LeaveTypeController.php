@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\LeaveType;
+use App\Models\LeaveEntitlement;
 use Session;
 
 class LeaveTypeController extends Controller
@@ -50,8 +51,10 @@ class LeaveTypeController extends Controller
       $leaveTypes=LeaveType::find($id);
       $leaveTypes->delete();
 
-      $leaveEntitlements=LeaveEntitlements::all()->where('leaveType',$id);
-      $leaveEntitlements->delete();
+      $leaveEntitlements=LeaveEntitlement::all()->where('leaveType',$id);
+      foreach($leaveEntitlements as $leaveEntitlement) {
+         $leaveEntitlement->delete();
+      }
 
       return redirect()->route('showLeaveTypes');
    }
