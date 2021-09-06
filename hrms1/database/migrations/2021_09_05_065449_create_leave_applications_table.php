@@ -16,7 +16,8 @@ class CreateLeaveApplicationsTable extends Migration
         Schema::create('leave_applications', function (Blueprint $table) {
             $table->id();
             $table->string('employee');
-            $table->string('leave_type');
+            $table->string('leave_type_id');
+            $table->string('leave_type_name');
             $table->dateTime('start_date_time');
             $table->dateTime('end_date_time');
             $table->string('reason');

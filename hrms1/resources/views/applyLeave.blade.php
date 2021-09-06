@@ -6,22 +6,24 @@
    <form method="post" action="{{ route('submitApplication') }}" enctype="multipart/form-data">
       @csrf
 
-      @foreach($employees as $employee)
       <p>
          <label for="leaveType" class="label">Leave Type</label>
-         <select class="form-control" name="leaveType" required>
+         <select class="form-control" name="leaveTypeId" required>
             @foreach($leaveTypes as $leaveType)
-            <option value="{{ $leaveType->id }}">{{ $leaveType-> name}}</option>
+            <option value="{{ $leaveType->id }}">{{ $leaveType->name}}</option>
             @endforeach
          </select>
+         <input type="hidden" name="leaveTypeName" value="aLeaveType">
       </p>
 
       <p>
          <label for="leaveBalance" style="color:red;">Leave Balance</label>
       </p>
 
+      @foreach($employees as $employee)
       <input type="hidden" name="employee" value="{{ $employee->id }}">
       <input type="hidden" name="leaveApprover" value="{{ $employee->supervisor }}">
+      @endforeach
 
       <p>
          <label for="startDateTime" class="label">Start date time</label>
@@ -46,7 +48,7 @@
       <p>
          <input type="submit" name="create" value="Apply">
       </p>
-      @endforeach
+
    </form>
 </div>
 @endsection

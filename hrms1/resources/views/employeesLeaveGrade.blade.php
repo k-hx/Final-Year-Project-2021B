@@ -18,7 +18,7 @@
          <td>Action</td>
       </tr>
 
-      @foreach($leaveTypes as $leaveType)
+      @foreach($employees as $employee)
       <tr>
          <td>{{$leaveType->id}}</td>
          <td>{{$leaveType->name}}</td>

@@ -36,7 +36,8 @@ class LeaveApplicationController extends Controller
       $applyLeave=LeaveApplication::create([
          'database'=>$r->form,
          'employee'=>$r->employee,
-         'leave_type'=>$r->leaveType,
+         'leave_type_id'=>$r->leaveTypeId,
+         'leave_type_name'=>$r->leaveTypeName,
          'start_date_time'=>$r->startDateTime,
          'end_date_time'=>$r->endDateTime,
          'reason'=>$r->reason,
@@ -52,9 +53,9 @@ class LeaveApplicationController extends Controller
    public function showLeaveApplicationList() {
       $employees=Employee::all()->where('id',Auth::id());
       $leaveApplications=DB::table('leave_applications')
-                        ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type')
+                        ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
                         ->leftjoin('admins','admins.id','=','leave_applications.leave_approver')
-                        ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.name as leaveApproverName','leave_applications.*')
+                        ->select('admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
                         ->where('leave_applications.employee','=',Auth::id())
                         ->get();
       return view('leaveApplicationList')->with('employees',$employees)
@@ -64,7 +65,7 @@ class LeaveApplicationController extends Controller
    public function showLeaveApplicationListAdmin() {
       $admins=Admin::all()->where('id',Auth::id());
       $leaveApplications=DB::table('leave_applications')
-                        ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type')
+                        ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
                         ->leftjoin('employees','employees.id','=','leave_applications.employee')
                         ->select('leave_types.name as leaveTypeName','employees.id as employeeId','employees.full_name as employeeName','leave_applications.*')
                         ->where('leave_applications.leave_approver','=',Auth::id())
