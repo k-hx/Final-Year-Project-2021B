@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class LeaveType extends Model
 {
     use HasFactory;
-    protected $fillable=['name','min_num_of_days'];
+    protected $guarded=['id'];
 }

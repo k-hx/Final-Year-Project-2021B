@@ -20,7 +20,7 @@ class LeaveApplicationController extends Controller
    public function showApplyLeavePage() {
       $employees=Employee::all()->where('id',Auth::id());
       return view('applyLeave')->with('employees',$employees)
-                              ->with('leaveTypes',LeaveType::all());
+                              ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
    }
 
    public function submitApplication() {
@@ -55,9 +55,11 @@ class LeaveApplicationController extends Controller
       $leaveApplications=DB::table('leave_applications')
                         ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
                         ->leftjoin('admins','admins.id','=','leave_applications.leave_approver')
-                        ->select('admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
+                        ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
                         ->where('leave_applications.employee','=',Auth::id())
+                        ->orderBy('id','asc')
                         ->get();
+
       return view('leaveApplicationList')->with('employees',$employees)
                               ->with('leaveApplications',$leaveApplications);
    }

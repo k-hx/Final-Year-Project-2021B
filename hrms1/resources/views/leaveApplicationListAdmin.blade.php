@@ -23,7 +23,7 @@
       @foreach($leaveApplications as $leaveApplication)
       <tr>
          <td>{{ $leaveApplication->id }}</td>
-         <td>{{ $leaveApplication->leave_type_name }}</td>
+         <td>{{ $leaveApplication->leaveTypeName }}</td>
          <td>{{ $leaveApplication->employee }} {{ $leaveApplication->employeeName }}</td>
          <td>{{ $leaveApplication->start_date_time }}</td>
          <td>{{ $leaveApplication->end_date_time }}</td>

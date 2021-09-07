@@ -19,6 +19,7 @@ class LeaveTypeController extends Controller
       $addLeaveType=LeaveType::create([
          'name'=>$r->name,
          'min_num_of_days'=>$r->min_num_of_days,
+         'status'=>'Added',
       ]);
 
       Session::flash('success',"Leave type created successfully!");
@@ -26,7 +27,12 @@ class LeaveTypeController extends Controller
    }
 
    public function show() {
-      $leaveTypes=LeaveType::all();
+      $leaveTypes=DB::table('leave_types')
+                     ->where('status','Added')
+                     ->orWhere('status','Edited')
+                     ->orderBy('id','asc')
+                     ->get();
+
       return view('showLeaveTypes')->with('leaveTypes',$leaveTypes);
    }
 
@@ -41,6 +47,7 @@ class LeaveTypeController extends Controller
 
       $leaveTypes->name=$r->name;
       $leaveTypes->min_num_of_days=$r->min_num_of_days;
+      $leaveTypes->status='Edited';
       $leaveTypes->save();
 
       Session::flash('success',"Leave type updated successfully!");
@@ -49,7 +56,8 @@ class LeaveTypeController extends Controller
 
    public function delete($id) {
       $leaveTypes=LeaveType::find($id);
-      $leaveTypes->delete();
+      $leaveTypes->status='Deleted';
+      $leaveTypes->save();
 
       $leaveEntitlements=LeaveEntitlement::all()->where('leaveType',$id);
       foreach($leaveEntitlements as $leaveEntitlement) {

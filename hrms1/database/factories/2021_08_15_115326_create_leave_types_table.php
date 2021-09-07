@@ -16,7 +16,8 @@ class CreateLeaveTypesTable extends Migration
         Schema::create('leave_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedInteger('max_num_of_days');
+            $table->string('status');
+            $table->unsignedInteger('min_num_of_days');
             $table->timestamps();
         });
     }

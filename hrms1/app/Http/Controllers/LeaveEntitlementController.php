@@ -26,7 +26,7 @@ class LeaveEntitlementController extends Controller
 
       return view('leaveEntitlement')->with('leaveGrades',$leaveGrades)
                                           ->with('currentEntitlements',$currentEntitlements)
-                                          ->with('leaveTypes',LeaveType::all());
+                                          ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
    }
 
    public function addLeaveEntitlement($id) {
@@ -59,7 +59,7 @@ class LeaveEntitlementController extends Controller
       return view('editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
                                           ->with('leaveEntitlements',$leaveEntitlements)
                                           ->with('currentEntitlements',$currentEntitlements)
-                                         ->with('leaveTypes',LeaveType::all());
+                                          ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
    }
 
    public function updateLeaveEntitlement($leaveGradeId,$id) {
