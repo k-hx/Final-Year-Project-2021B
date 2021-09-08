@@ -12,6 +12,7 @@
 <td><a href="{{ route('createLeaveGrade') }}" class="btn btn-primary">Create Leave Grade</a></td>
 
 <div>
+   
    <table>
       <tr>
          <td>ID</td>

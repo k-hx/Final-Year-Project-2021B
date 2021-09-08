@@ -24,12 +24,14 @@
          <td>{{ $employee->full_name }}</td>
          <td>{{ $employee->leave_grade }}</td>
          <td>
-            <a href="{{}}" class="btn btn-primary" >Leave Grade</a>
+            <a href="{{ route('employeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">Leave Grade</a>
          </td>
       </tr>
       @endforeach
 
    </table>
+
+   <h1>Add a refresh button</h1>
 </div>
 
 

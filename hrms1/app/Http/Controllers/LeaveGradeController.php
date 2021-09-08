@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\LeaveGrade;
 use App\Models\Employee;
+use App\Models\EmployeesLeave;
 use Session;
 
 class LeaveGradeController extends Controller
@@ -68,7 +69,7 @@ class LeaveGradeController extends Controller
                                     ->with('leaveGrades',$leaveGrades);
    }
 
-   public function showEmployeesLeaveGrade() {
+   public function showAllEmployeesLeaveGrade() {
       $employees=DB::table('employees')
                   ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
                   ->select('leave_grades.name as leaveGradeName', 'employees.*')
@@ -76,5 +77,15 @@ class LeaveGradeController extends Controller
                   ->get();
 
       return view('allEmployeesLeaveGrade')->with('employees',$employees);
+   }
+
+   public function showAnEmployeesLeave($id) {
+      $employees=DB::table('employees')
+                  ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
+                  ->select('leave_grades.name as leaveGradeName', 'employees.*')
+                  ->where('employees.id','=',$id)
+                  ->get();
+
+      return view('employeesLeaveGrade')->with('employees',$employees);
    }
 }
