@@ -59,8 +59,13 @@ class LeaveGradeController extends Controller
                                           ->with('leaveGrades',$leaveGrades);
    }
 
-   public function assignLeaveGrade() {
-
+   public function assignLeaveGrade($id) {
+      $employees=Employee::all()->where('id',$id);
+      $leaveGrades=DB::table('leave_grades')
+                  ->orderBy('name','asc')
+                  ->get();
+      return view('assignLeaveGrade')->with('employees',$employees)
+                                    ->with('leaveGrades',$leaveGrades);
    }
 
    public function showEmployeesLeaveGrade() {
@@ -70,6 +75,6 @@ class LeaveGradeController extends Controller
                   ->orderBy('id','asc')
                   ->get();
 
-      return view('employeesLeaveGrade')->with('employees',$employees);
+      return view('allEmployeesLeaveGrade')->with('employees',$employees);
    }
 }

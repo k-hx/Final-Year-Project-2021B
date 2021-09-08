@@ -10,29 +10,9 @@
 @endif
 
 <div>
-   <table>
-      <tr>
-         <td>ID</td>
-         <td>Employee Name</td>
-         <td>Leave Grade</td>
-         <td>Action</td>
-      </tr>
-
-      @foreach($employees as $employee)
-      <tr>
-         <td>{{ $employee->id }}</td>
-         <td>{{ $employee->full_name }}</td>
-         <td>
-         
-         </td>
-         <td>
-            <a href="#" class="btn btn-warning" >Leave Grade</a>
-            <a href="#" class="btn btn-danger" onclick="return confirm('Delete ?')">Delete</a>
-         </td>
-      </tr>
-      @endforeach
-
-   </table>
+   @foreach($employees as $employee)
+   <p class="font-weight-bold">Employee</p>
+   @endforeach
 </div>
 
 

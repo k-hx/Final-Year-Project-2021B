@@ -19,7 +19,7 @@ class CreateEmployeeLeavesTable extends Migration
             $table->string('leave_type');
             $table->string('total_days');
             $table->string('leaves_taken');
-            $table->string('remaining_days')
+            $table->string('remaining_days');
             $table->string('year');
             $table->timestamps();
         });
