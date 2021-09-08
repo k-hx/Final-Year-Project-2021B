@@ -14,19 +14,26 @@
       <tr>
          <td>ID</td>
          <td>Employee Name</td>
-         <td>Employee's Leave Grade</td>
+         <td>Leave Grade</td>
          <td>Action</td>
       </tr>
 
       @foreach($employees as $employee)
       <tr>
-         <td>{{$leaveType->id}}</td>
-         <td>{{$leaveType->name}}</td>
-         <td>{{$leaveType->min_num_of_days}}</td>
-         <td><a href="{{ route('editLeaveType', ['id' => $leaveType->id]) }}" class="btn btn-warning" >Edit</a><a href="{{ route('deleteLeaveType', ['id' => $leaveType->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$leaveType->name}}?')">Delete</a></td>
+         <td>{{ $employee->id }}</td>
+         <td>{{ $employee->full_name }}</td>
+         <td>
+         
+         </td>
+         <td>
+            <a href="#" class="btn btn-warning" >Leave Grade</a>
+            <a href="#" class="btn btn-danger" onclick="return confirm('Delete ?')">Delete</a>
+         </td>
       </tr>
       @endforeach
 
    </table>
 </div>
+
+
 @endsection

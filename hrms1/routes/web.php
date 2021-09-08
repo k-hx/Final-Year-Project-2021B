@@ -78,3 +78,6 @@ Route::get('admin/reject/{id}', [App\Http\Controllers\LeaveApplicationController
 
 // cancel leave -----------------------------------------------------------
 Route::get('leaveApplication/cancel/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
+
+// employees' leave grade -----------------------------------------------------------
+Route::get('employeesLeaveGrade', [App\Http\Controllers\LeaveGradeController::class, 'showEmployeesLeaveGrade'])->name('employeesLeaveGrade');

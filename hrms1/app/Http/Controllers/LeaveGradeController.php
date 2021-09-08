@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\LeaveGrade;
+use App\Models\Employee;
 use Session;
 
 class LeaveGradeController extends Controller
@@ -48,5 +49,27 @@ class LeaveGradeController extends Controller
       $leaveGrades=LeaveGrade::find($id);
       $leaveGrades->delete();
       return redirect()->route('showLeaveGrades');
+   }
+
+   public function showAssignLeaveGradePage($id) {
+      $employees=Employee::all()->where('id',$id);
+      $leaveGrades=LeaveGrade::all();
+
+      return view('assignLeaveGradePage')->with('employees',$employees)
+                                          ->with('leaveGrades',$leaveGrades);
+   }
+
+   public function assignLeaveGrade() {
+
+   }
+
+   public function showEmployeesLeaveGrade() {
+      $employees=DB::table('employees')
+                  ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
+                  ->select('leave_grades.name as leaveGradeName', 'employees.*')
+                  ->orderBy('id','asc')
+                  ->get();
+
+      return view('employeesLeaveGrade')->with('employees',$employees);
    }
 }
