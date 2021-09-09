@@ -54,19 +54,19 @@ class LeaveGradeController extends Controller
 
    public function showAssignLeaveGradePage($id) {
       $employees=Employee::all()->where('id',$id);
-      $leaveGrades=LeaveGrade::all();
-
-      return view('assignLeaveGradePage')->with('employees',$employees)
-                                          ->with('leaveGrades',$leaveGrades);
-   }
-
-   public function assignLeaveGrade($id) {
-      $employees=Employee::all()->where('id',$id);
       $leaveGrades=DB::table('leave_grades')
                   ->orderBy('name','asc')
                   ->get();
+
       return view('assignLeaveGrade')->with('employees',$employees)
                                     ->with('leaveGrades',$leaveGrades);
+   }
+
+   public function assignLeaveGrade() {
+      // $r=request();
+      //$assignLeaveGrade=LeaveGradeHistory::create
+
+      return redirect()->route('home');
    }
 
    public function showAllEmployeesLeaveGrade() {
@@ -86,6 +86,14 @@ class LeaveGradeController extends Controller
                   ->where('employees.id','=',$id)
                   ->get();
 
-      return view('employeesLeaveGrade')->with('employees',$employees);
+      $leaveEntitlements=DB::table('leave_entitlements')
+                  ->leftjoin('leave_types','leave_entitlements.leaveType','=','leave_types.id')
+                  ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName')
+                  ->orderBy('leave_types.id','asc')
+                  ->where('leave_entitlements.leaveGrade','=','employees.leave_grade')
+                  ->get();
+
+      return view('employeesLeaveGrade')->with('employees',$employees)
+                                       ->with('leaveEntitlements',$leaveEntitlements);
    }
 }

@@ -25,7 +25,30 @@
       Employee's Leave Grade: {{ $employee->leave_grade }}
    </p>
 
-   <h1>Show leave entitlements for the leave grade here</h1>
+   @if($employee->leave_grade == '-')
+   <p>Leave grade is not yet assigned.</p>
+   @endif
+
+   <a href="{{ route('showAssignLeaveGradePage',['id' => $employee->id]) }}" class="btn btn-primary">Change Leave Grade</a>
+
+   <table>
+      <tr>
+         <th>Leave Type ID</th>
+         <th>Leave Type Name</th>
+         <th>Number of Days Entitled</th>
+      </tr>
+
+      @foreach($leaveEntitlements as $leaveEntitlement)
+      <tr>
+         <td>{{ $leaveEntitlement->leaveTypeId }}</td>
+         <td>{{ $leaveEntitlement->leaveTypeName }}</td>
+         <td>{{ $leaveEntitlement->num_of_days }}</td>
+      </tr>
+      @endforeach
+      <tr>
+
+      </tr>
+   </table>
 
    @endforeach
 </div>
