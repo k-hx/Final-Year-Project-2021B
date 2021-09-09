@@ -12,12 +12,15 @@
 <script type="text/javascript">
 
 function validate() {
+   @foreach($employees as $employee)
    var selectedLeaveGrade = document.getElementById("employeesLeaveGrade");
    var result = selectedLeaveGrade.options[selectedLeaveGrade.selectedIndex].value;
-   alert(result);
+   var currentLeaveGrade = {{ $employee->leave_grade }};
 
-   @foreach($employees as $employee)
-   alert("{{ $employee->leave_grade }}");
+   if (result == currentLeaveGrade) {
+      alert('The selected leave grade is the same as the current leave grade.');
+   }
+
    @endforeach
 }
 
@@ -29,24 +32,24 @@ function validate() {
       @csrf
       <p>
          <label for="employeeId">Employee ID</label>
-         <input type="text" name="employeeId" value="{{ $employee->id }}" class="form-control" readonly>
+         <input type="text" name="employee" value="{{ $employee->id }}" class="form-control" readonly>
       </p>
 
       <p>
          <label for="employeeName">Employee Name</label>
-         <input type="text" name="employeeName" value="{{ $employee->full_name }}" class="form-control" readonly>
+         <input type="text" name="full_name" value="{{ $employee->full_name }}" class="form-control" readonly>
       </p>
 
       <p>
          <label for="employeesLeaveGrade">Employee's Leave Grade</label>
-         <select class="form-control" id="employeesLeaveGrade" name="employeesLeaveGrade">
+         <select class="form-control" id="employeesLeaveGrade" name="leave_grade">
             @foreach($leaveGrades as $leaveGrade)
             <option value="{{ $leaveGrade->id }}" @if($leaveGrade->id == $employee->leaveGrade) selected @endif>{{ $leaveGrade->name }}</option>
             @endforeach
          </select>
 
       </p>
-      <input type="submit" name="" value="Assign">
+      <input type="submit" name="assignButton" value="Assign">
    </form>
    @endforeach
 </div>

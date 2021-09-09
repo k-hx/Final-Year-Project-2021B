@@ -80,7 +80,7 @@ Route::get('admin/reject/{id}', [App\Http\Controllers\LeaveApplicationController
 Route::get('leaveApplication/cancel/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
 
 // all employees' leave grade -----------------------------------------------------------
-Route::get('employeesLeave/all', [App\Http\Controllers\LeaveGradeController::class, 'showAllEmployeesLeaveGrade'])->name('employeesLeaveGrade');
+Route::get('employeesLeave/all', [App\Http\Controllers\LeaveGradeController::class, 'showAllEmployeesLeaveGrade'])->name('allEmployeesLeaveGrade');
 
 // an employee's leave grade -----------------------------------------------------------
 Route::get('employeesLeave/{id}',[App\Http\Controllers\LeaveGradeController::class, 'showAnEmployeesLeave'])->name('employeesLeaveGrade');

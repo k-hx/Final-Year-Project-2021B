@@ -8,6 +8,7 @@ use App\Models\LeaveGrade;
 use App\Models\Employee;
 use App\Models\EmployeesLeave;
 use Session;
+use Carbon\Carbon;
 
 class LeaveGradeController extends Controller
 {
@@ -19,6 +20,7 @@ class LeaveGradeController extends Controller
       $r=request();
       $addLeaveGrade=LeaveGrade::create([
          'name'=>$r->name,
+         'status'=>'Added',
       ]);
 
       Session::flash('success',"Leave grade created successfully!");
@@ -26,8 +28,16 @@ class LeaveGradeController extends Controller
    }
 
    public function show() {
-      $leaveGrades=LeaveGrade::all();
-      return view('showLeaveGrades')->with('leaveGrades',$leaveGrades);
+      $leaveGrades=DB::table('leave_grades')
+                     ->where('status','=','Added')
+                     ->orWhere('status','=','Edited')
+                     ->orderBy('id','asc')
+                     ->get();
+
+      $employees=Employee::all();
+
+      return view('showLeaveGrades')->with('leaveGrades',$leaveGrades)
+                                    ->with('employees',$employees);
    }
 
    public function edit($id) {
@@ -40,6 +50,7 @@ class LeaveGradeController extends Controller
       $leaveGrades=LeaveGrade::find($r->id);
 
       $leaveGrades->name=$r->name;
+      $leaveGrades->status='Edited';
       $leaveGrades->save();
 
       Session::flash('success',"Leave grade updated successfully!");
@@ -48,7 +59,18 @@ class LeaveGradeController extends Controller
 
    public function delete($id) {
       $leaveGrades=LeaveGrade::find($id);
-      $leaveGrades->delete();
+
+      $leaveGrades->status='Deleted';
+      $leaveGrades->save();
+
+      $employees=Employee::all()->where('leave_grade',$id);
+      $employees->leave_grade='Unassigned';
+      $employees->save();
+
+      $leaveGradeHistories=LeaveGradeHistory::all()->where('leaveGrade',$id);
+      $leaveGradeHistories->effective_until(Carbon::now());
+      $leaveGradeHistories->save();
+
       return redirect()->route('showLeaveGrades');
    }
 
@@ -63,10 +85,15 @@ class LeaveGradeController extends Controller
    }
 
    public function assignLeaveGrade() {
-      // $r=request();
-      //$assignLeaveGrade=LeaveGradeHistory::create
+      $r=request();
+      $assignLeaveGrade=LeaveGradeHistory::create([
+         'employee'=>$r->employeeId,
+         'leave_grade'=>$r->leave_grade,
+         'effective_from'=>$r->Carbon::now();
+      ]);
 
-      return redirect()->route('home');
+      Session::flash('success',"Leave grade assigned successfully!");
+      return redirect()->route('allEmployeesLeaveGrade');
    }
 
    public function showAllEmployeesLeaveGrade() {

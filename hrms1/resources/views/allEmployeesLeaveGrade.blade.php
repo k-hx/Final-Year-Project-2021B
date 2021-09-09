@@ -9,6 +9,8 @@
     </div>
 @endif
 
+<h1>Add a refresh button</h1>
+
 <div>
    <table>
       <tr>
@@ -31,7 +33,6 @@
 
    </table>
 
-   <h1>Add a refresh button</h1>
 </div>
 
 

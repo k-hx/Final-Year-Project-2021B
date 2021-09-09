@@ -25,7 +25,7 @@
       Employee's Leave Grade: {{ $employee->leave_grade }}
    </p>
 
-   @if($employee->leave_grade == '-')
+   @if($employee->leave_grade == 'Unassigned')
    <p>Leave grade is not yet assigned.</p>
    @endif
 

@@ -24,7 +24,7 @@
              <button type="button" id="sidebarCollapse" class="btn btn-info">
                <i class="fas fa-bars"></i>
              </button>
-             HRMS
+             HRMS             
            </a>
 
             <ul class="navbar-nav">
