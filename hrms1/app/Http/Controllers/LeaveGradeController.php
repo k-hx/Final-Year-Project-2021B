@@ -7,6 +7,7 @@ use DB;
 use App\Models\LeaveGrade;
 use App\Models\Employee;
 use App\Models\EmployeesLeave;
+use App\Models\LeaveGradeHistory;
 use Session;
 use Carbon\Carbon;
 
@@ -64,36 +65,18 @@ class LeaveGradeController extends Controller
       $leaveGrades->save();
 
       $employees=Employee::all()->where('leave_grade',$id);
-      $employees->leave_grade='Unassigned';
-      $employees->save();
+      foreach($employees as $employee) {
+         $employees->leave_grade='Unassigned';
+         $employees->save();
+      }
 
-      $leaveGradeHistories=LeaveGradeHistory::all()->where('leaveGrade',$id);
-      $leaveGradeHistories->effective_until(Carbon::now());
-      $leaveGradeHistories->save();
+      $leaveGradeHistories=leaveGradeHistory::all()->where('leaveGrade',$id);
+      foreach($leaveGradeHistories as $leaveGradeHistory) {
+         $leaveGradeHistory->effective_until(Carbon::now());
+         $leaveGradeHistory->save();
+      }
 
       return redirect()->route('showLeaveGrades');
-   }
-
-   public function showAssignLeaveGradePage($id) {
-      $employees=Employee::all()->where('id',$id);
-      $leaveGrades=DB::table('leave_grades')
-                  ->orderBy('name','asc')
-                  ->get();
-
-      return view('assignLeaveGrade')->with('employees',$employees)
-                                    ->with('leaveGrades',$leaveGrades);
-   }
-
-   public function assignLeaveGrade() {
-      $r=request();
-      $assignLeaveGrade=LeaveGradeHistory::create([
-         'employee'=>$r->employeeId,
-         'leave_grade'=>$r->leave_grade,
-         'effective_from'=>$r->Carbon::now();
-      ]);
-
-      Session::flash('success',"Leave grade assigned successfully!");
-      return redirect()->route('allEmployeesLeaveGrade');
    }
 
    public function showAllEmployeesLeaveGrade() {
@@ -106,7 +89,7 @@ class LeaveGradeController extends Controller
       return view('allEmployeesLeaveGrade')->with('employees',$employees);
    }
 
-   public function showAnEmployeesLeave($id) {
+   public function showAnEmployeesLeave($id,$leaveGradeId) {
       $employees=DB::table('employees')
                   ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
                   ->select('leave_grades.name as leaveGradeName', 'employees.*')
@@ -115,12 +98,42 @@ class LeaveGradeController extends Controller
 
       $leaveEntitlements=DB::table('leave_entitlements')
                   ->leftjoin('leave_types','leave_entitlements.leaveType','=','leave_types.id')
-                  ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName')
+                  ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
                   ->orderBy('leave_types.id','asc')
-                  ->where('leave_entitlements.leaveGrade','=','employees.leave_grade')
+                  ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
                   ->get();
 
       return view('employeesLeaveGrade')->with('employees',$employees)
                                        ->with('leaveEntitlements',$leaveEntitlements);
    }
+
+   public function setEmployeesLeaveGrade($id) {
+      $employees=Employee::all()->where('id',$id);
+      $leaveGrades=DB::table('leave_grades')
+                  ->orderBy('name','asc')
+                  ->get();
+
+      return view('setEmployeesLeaveGrade')->with('employees',$employees)
+                                          ->with('leaveGrades',$leaveGrades);
+   }
+
+   public function updateEmployeesLeaveGrade() {
+      $r=request();
+
+      $id=$r->employee;
+      $employees=Employee::find($id);
+      $employees->leave_grade=$r->leave_grade;
+      $employees->save();
+
+      $createLeaveGradeHistory=LeaveGradeHistory::create([
+         'employee'=>$r->employee,
+         'leave_grade'=>$r->leave_grade,
+         'effective_from'=>Carbon::now(),
+      ]);
+
+      Session::flash('success',"Leave grade assigned successfully!");
+      return redirect()->route('allEmployeesLeaveGrade');
+   }
+
+
 }

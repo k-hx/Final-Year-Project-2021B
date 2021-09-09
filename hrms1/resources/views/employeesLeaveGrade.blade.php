@@ -14,7 +14,7 @@
 <div>
    @foreach($employees as $employee)
    <p class="font-weight-bold">
-      Employee's ID: {{$employee->id}}
+      Employee's ID: {{ $employee->id }}
    </p>
 
    <p class="font-weight-bold">
@@ -22,14 +22,14 @@
    </p>
 
    <p class="font-weight-bold">
-      Employee's Leave Grade: {{ $employee->leave_grade }}
+      Employee's Leave Grade: {{ $employee->leave_grade }} {{ $employee->leaveGradeName }}
    </p>
 
    @if($employee->leave_grade == 'Unassigned')
    <p>Leave grade is not yet assigned.</p>
    @endif
 
-   <a href="{{ route('showAssignLeaveGradePage',['id' => $employee->id]) }}" class="btn btn-primary">Change Leave Grade</a>
+   <a href="{{ route('setEmployeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">Change Leave Grade</a>
 
    <table>
       <tr>

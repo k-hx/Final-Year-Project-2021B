@@ -14,14 +14,22 @@
       var number=0;
 
       @foreach($employees as $employee)
-      if ({{ $employee->leaveGrade == leaveGradeId }}) {
+      if ({{ $employee->leaveGrade }}=={{ $employee->leaveGradeId }}) {
             number=1;
             break;
       }
       @endforeach
    }
 
+   var leaveGradeName = "";
+
    if (number==0) {
+      @foreach($leaveGrades as $leaveGrade)
+      if({{ $leaveGrade->id }}==leaveGradeId) {
+         leaveGradeName={{ $leaveGrade->name }}
+      }
+      @endforeach
+      
       return confirm('Delete {{$leaveGrade->name}}?');
    } else {
       return alert('The leave grade is still asigned to at least an employee!');

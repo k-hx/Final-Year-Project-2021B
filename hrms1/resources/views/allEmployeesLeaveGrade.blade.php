@@ -24,9 +24,9 @@
       <tr>
          <td>{{ $employee->id }}</td>
          <td>{{ $employee->full_name }}</td>
-         <td>{{ $employee->leave_grade }}</td>
+         <td>{{ $employee->leave_grade }} {{ $employee->leaveGradeName }}</td>
          <td>
-            <a href="{{ route('employeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">Leave Grade</a>
+            <a href="{{ route('employeesLeaveGrade', ['id' => $employee->id,'leaveGradeId' => $employee->leave_grade]) }}" class="btn btn-primary">View/Edit Leave Grade</a>
          </td>
       </tr>
       @endforeach
