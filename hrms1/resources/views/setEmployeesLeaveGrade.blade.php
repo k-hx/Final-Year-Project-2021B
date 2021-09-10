@@ -43,16 +43,20 @@
             <label for="employeesLeaveGrade">Employee's Leave Grade</label>
             <select class="form-control" id="employeesLeaveGrade" name="leave_grade">
                @foreach($leaveGrades as $leaveGrade)
-               <option value="{{ $leaveGrade->id }}"
-                  @if($leaveGrade->id == $employee->leave_grade)
-                  selected
-                  @endif>
-                  {{ $leaveGrade->name }}
-               </option>
+                  @if($leaveGrade->status !== 'Deleted')
+                  <option value="{{ $leaveGrade->id }}"
+                     @if($leaveGrade->id == $employee->leave_grade)
+                     selected
+                     @endif>
+                     {{ $leaveGrade->name }}
+                  </option>
+                  @endif
                @endforeach
             </select>
-
          </p>
+
+         <input type="hidden" name="originalLeaveGrade" value="{{ $employee->leave_grade }}">
+
          <input type="submit" name="assignButton" value="Assign">
       </form>
       @endforeach
