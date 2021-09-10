@@ -1,0 +1,96 @@
+Important!
+Multi-user Login
+If delete leave grade -> status "Deleted"
+because leave grade history needs its name
+Employees leave grade -> unassigned?? or cannot delete?
+Refresh leave every year
+Effective until date time
+
+Status for leave entitlement
+change when changing leave grade ->
+leave type is not included in the leave entitlement of the leave grade
+change back if assign to another leave grade with the leave type
+
+Leave entitlement
+update when changing leave grade
+
+When is the leave considered taken?
+When the leave is approved?
+Then if the leave is cancelled/rejected,
+check if it is approved before, then deduct if it is approved.
+
+Edit leave entitlement for individual employee
+after assign
+because I think it would be easier, hohoho
+
+Update employee's leave grade after deleting a leave grade
+
+1. Employees' leave
+View own leave grade
+
+Do they need a leave table for all employees?
+-> employee_leave table
+-> created when set leave grade for employee
+-> data field:
+     employee (employee ID)
+     leave_type (leave type ID)
+     total_days (if different from leave grade, customize?)
+     (for each if (leaveEntitlement->leaveType !== numOfDays isCustomize = true)
+     leaves_taken
+     remaining_days ??
+     year
+
+update when:
+add leave entitlements to leave grade
+edit leave entitlements of a leave grade
+delete leave entitlement of a leave grade
+
+
+Employee's leave grade history
+-> employee (employee ID)
+-> leave grade (leave grade ID)
+-> effective_from
+-> effective_until
+
+Change leave grade
+-> display all employees or only the employee?
+
+If change leave grade before year ends
+-> remaining_days
+     = new total days - (old total days - remaining days)
+deduct the leaves taken
+
+Renew leaves every year manually
+-> refresh button
+-> find employee leave grade
+-> create employee_leaves
+
+2. Employees' leave grade
+Set leave grade for employee
+Change employee's leave grade
+
+3. Apply leave
+paid leave OR unpaid leave
+calculate remaining leave
+If remaining days < 1 then cannot take the type of leave
+
+--------------------------------------------------
+
+2. Category of salary component
+Create
+Edit
+Delete
+
+3. Salary component
+Create salary component
+Edit salary component
+Delete salary component
+
+4. Pay grade
+Add salary component
+Remove salary component
+
+5. Payroll
+
+
+Add relationship in model?
