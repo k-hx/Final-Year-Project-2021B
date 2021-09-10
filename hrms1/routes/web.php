@@ -86,6 +86,6 @@ Route::get('employeesLeave/all', [App\Http\Controllers\LeaveGradeController::cla
 Route::get('employeesLeave/{id}/{leaveGradeId}',[App\Http\Controllers\LeaveGradeController::class, 'showAnEmployeesLeave'])->name('employeesLeaveGrade');
 
 // assign leave grade -----------------------------------------------------------
-Route::get('setEmployeesLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeController::class, 'setEmployeesLeaveGrade'])->name('setEmployeesLeaveGrade');
+Route::get('setEmployeesLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeController::class, 'setEmployeesLeaveGradePage'])->name('setEmployeesLeaveGrade');
 
 Route::post('setEmployeesLeaveGrade/update',[App\Http\Controllers\LeaveGradeController::class, 'updateEmployeesLeaveGrade'])->name('updateEmployeesLeaveGrade');
