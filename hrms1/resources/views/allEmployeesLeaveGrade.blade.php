@@ -9,7 +9,7 @@
     </div>
 @endif
 
-<h1>Add a refresh button</h1>
+<a href="#" class="btn btn-primary">Refresh</a>
 
 <div>
    <table>
