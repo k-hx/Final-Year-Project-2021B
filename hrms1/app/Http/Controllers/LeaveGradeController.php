@@ -8,6 +8,7 @@ use App\Models\LeaveGrade;
 use App\Models\Employee;
 use App\Models\EmployeeLeave;
 use App\Models\LeaveGradeHistory;
+use App\Models\LeaveEntitlement;
 use Session;
 use Carbon\Carbon;
 
@@ -76,6 +77,8 @@ class LeaveGradeController extends Controller
          $leaveGradeHistory->save();
       }
 
+      //update employees' leave record
+
       return redirect()->route('showLeaveGrades');
    }
 
@@ -126,14 +129,16 @@ class LeaveGradeController extends Controller
       $employees->save();
 
       if($r->originalLeaveGrade !== 'Unassigned') {
-         $updateLastLeaveGradeHistories=DB::table('leave_grade_histories')
-                                       ->where('leave_grade_histories.employee','=',$id)
-                                       ->whereNull('leave_grade_histories.effective_until')
+         $lastLeaveGradeHistories=DB::table('leave_grade_histories')
+                                       ->where('employee','=',$id)
+                                       ->whereNull('effective_until')
                                        ->get();
 
-         foreach($updateLastLeaveGradeHistories as $updateLastLeaveGradeHistory) {
-            $updateLastLeaveGradeHistory->effective_until=Carbon::now();
-            $updateLastLeaveGradeHistory->save();
+         foreach($lastLeaveGradeHistories as $lastLeaveGradeHistory) {
+            $id=$lastLeaveGradeHistory->id;
+            $lastLeaveGradeHistory=LeaveGradeHistory::find($id);
+            $lastLeaveGradeHistory->effective_until=Carbon::now();
+            $lastLeaveGradeHistory->save();
          }
       }
 
@@ -142,6 +147,7 @@ class LeaveGradeController extends Controller
          'leave_grade'=>$r->leave_grade,
          'effective_from'=>Carbon::now(),
       ]);
+
 
       if($r->originalLeaveGrade == 'Unassigned') {
          $leaveEntitlements=DB::table('leave_entitlements')
@@ -162,12 +168,86 @@ class LeaveGradeController extends Controller
             ]);
          }
       } else {
-         //deduct leaves taken
+         $leaveGradeId=$r->leave_grade;
+         $leaveEntitlements=DB::table('leave_entitlements')
+                     ->leftjoin('leave_types','leave_entitlements.leaveType','=','leave_types.id')
+                     ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+                     ->orderBy('leave_types.id','asc')
+                     ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
+                     ->get();
+
+         $employeeLeaves=DB::table('employee_leaves')
+                        ->where('employee','=',$r->employee)
+                        ->where('year','=',Carbon::now()->format('Y'))
+                        ->get();
+
+         foreach($leaveEntitlements as $leaveEntitlement) {
+            $leaveEntitlementId=$leaveEntitlement->id;
+            $leaveEntitlement=LeaveEntitlement::find($leaveEntitlementId);
+            $isMatched=0;
+
+            foreach($employeeLeaves as $employeeLeave) {
+               $employeeLeaveId=$employeeLeave->id;
+               $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+               if($employeeLeave->leave_type == $leaveEntitlement->leaveType) {
+                  $isMatched=1;
+
+                  $employeeLeave->total_days=$leaveEntitlement->num_of_days;
+                  $remaining_days=($leaveEntitlement->num_of_days)-($employeeLeave->leaves_taken);
+                  if($leaveEntitlement->num_of_days-$employeeLeave->leaves_taken <0) {
+                     $remaining_days=0;
+                  }
+                  $employeeLeave->remaining_days=$remaining_days;
+               }
+               $employeeLeave->save();
+            }
+
+            // if($isMatched==0) {
+            //    $leaveEntitlements=DB::table('leave_entitlements')
+            //                ->leftjoin('leave_types','leave_entitlements.leaveType','=','leave_types.id')
+            //                ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+            //                ->orderBy('leave_types.id','asc')
+            //                ->where('leave_entitlements.leaveGrade','=',$r->leave_grade)
+            //                ->get();
+            //
+            //    foreach ($leaveEntitlements as $leaveEntitlement) {
+            //       $createEmployeeLeave=EmployeeLeave::create([
+            //          'employee'=>$r->employee,
+            //          'leave_type'=>$leaveEntitlement->leaveType,
+            //          'total_days'=>$leaveEntitlement->num_of_days,
+            //          'leaves_taken'=>0,
+            //          'remaining_days'=>$leaveEntitlement->num_of_days,
+            //          'year'=>Carbon::now()->format('Y'),
+            //       ]);
+            //    }
+            // }
+
+         }
       }
 
       Session::flash('success',"Leave grade assigned successfully!");
       return redirect()->route('allEmployeesLeaveGrade');
    }
 
+   function debuggingFunction() {
+      $leaveGradeId=7;
+      $leaveEntitlements=DB::table('leave_entitlements')
+                  ->leftjoin('leave_types','leave_entitlements.leaveType','=','leave_types.id')
+                  ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+                  ->orderBy('leave_types.id','asc')
+                  ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
+                  ->get();
+
+      $employeeLeaves=DB::table('employee_leaves')
+                     ->where('employee','=',1)
+                     ->where('year','=',Carbon::now()->format('Y'))
+                     ->get();
+
+
+      return view('debuggingView')->with('leaveEntitlements',$leaveEntitlements)
+                                 ->with('employeeLeaves',$employeeLeaves);
+
+   }
 
 }

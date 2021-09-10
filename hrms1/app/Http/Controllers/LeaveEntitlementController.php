@@ -22,6 +22,7 @@ class LeaveEntitlementController extends Controller
                            ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
                            ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
                            ->where('leave_entitlements.leaveGrade','=',$id)
+                           ->orderBy('leave_types.id','asc')
                            ->get();
 
       return view('leaveEntitlement')->with('leaveGrades',$leaveGrades)
