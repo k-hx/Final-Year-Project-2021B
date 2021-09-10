@@ -37,7 +37,7 @@
             @endif
          </td>
          <td>
-            @if ($leaveApplication->status !== 'Leave Taken')
+            @if ($leaveApplication->status !== 'Leave Taken' && $leaveApplication->status !== 'Cancelled')
                @if ($leaveApplication->status !== 'Approved')
                <a href="{{ route('approveLeave', ['id' => $leaveApplication->id]) }}" class="btn btn-success" >Approve</a>
                @endif
@@ -45,6 +45,8 @@
                @if ($leaveApplication->status !== 'Rejected')
                <a href="{{ route('rejectLeave', ['id' => $leaveApplication->id]) }}" class="btn btn-warning" >Reject</a>
                @endif
+            @else
+               -
             @endif
          </td>
       </tr>
