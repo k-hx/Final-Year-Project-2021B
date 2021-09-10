@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class employee_leave extends Model
+class EmployeeLeave extends Model
 {
     use HasFactory;
+
+    protected $guarded=['id'];
 }
