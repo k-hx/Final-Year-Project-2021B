@@ -77,7 +77,10 @@ class LeaveGradeController extends Controller
          $leaveGradeHistory->save();
       }
 
+      
+
       //update employees' leave record
+
 
       return redirect()->route('showLeaveGrades');
    }

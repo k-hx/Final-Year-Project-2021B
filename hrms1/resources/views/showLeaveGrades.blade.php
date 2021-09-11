@@ -4,36 +4,31 @@
 
 @section('content')
 @if(Session::has('success'))
-    <div class="alert alert-success" role="alert">
-        {{ Session::get('success')}}
-    </div>
+<div class="alert alert-success" role="alert">
+   {{ Session::get('success')}}
+</div>
 @endif
 
 <script type="text/javascript">
-   function validate(leaveGradeId) {
-      var number=0;
+function validate(leaveGradeId) {
+   var number=0;
 
-      @foreach($employees as $employee)
-      if ({{ $employee->leaveGrade }}=={{ $employee->leaveGradeId }}) {
-            number=1;
-            break;
-      }
-      @endforeach
+   @foreach($employees as $employee)
+   $employeeLeaveGrade={{ $employee->leave_grade }}
+   if({{ $employeeLeaveGrade }}==leaveGradeId) {
+      number=1;
    }
+   @endforeach
 
-   var leaveGradeName = "";
-
-   if (number==0) {
-      @foreach($leaveGrades as $leaveGrade)
-      if({{ $leaveGrade->id }}==leaveGradeId) {
-         leaveGradeName={{ $leaveGrade->name }}
-      }
-      @endforeach
-      
-      return confirm('Delete {{$leaveGrade->name}}?');
-   } else {
-      return alert('The leave grade is still asigned to at least an employee!');
+   var leaveGradeName="";
+   @foreach($leaveGrades as $leaveGrade)
+   if({{ $leaveGrade->id }}==leaveGradeId) {
+      leaveGradeName={{ $leaveGrade->name }};
    }
+   @endforeach
+   
+}
+
 </script>
 
 <td><a href="{{ route('createLeaveGrade') }}" class="btn btn-primary">Create Leave Grade</a></td>

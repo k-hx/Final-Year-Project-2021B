@@ -1,20 +1,30 @@
-Delete debugging page!!!
-
 Important!
 Multi-user Login
-If delete leave grade -> status "Deleted"
-because leave grade history needs its name
 Employees leave grade -> unassigned?? or cannot delete?
 Refresh leave every year
 Effective until date time
+If delete leave grade -> status "Deleted"
+because leave grade history needs its name
 
-Status for leave entitlement
+Primary
+1. Cannot delete a leave grade when it is assigned to employee
+2. When employee is no longer working for the company, what should the leave grade be?
+3. Change employee's leave when add/remove/edit number of days for leave entitlement for a leave grade
+4. Show employee's leave data in the employee's leave grade page
+
+Status for employee's leave record
 change when changing leave grade ->
 leave type is not included in the leave entitlement of the leave grade
 change back if assign to another leave grade with the leave type
 
 Leave entitlement
 update when changing leave grade
+
+Update employee's leave
+-> when adding leave entitlement for a leave grade
+-> when changing leave grade
+-> when editing/updating leave entitlement for a leave grade
+-> when deleting a leave grade?? Can it be deleted?
 
 When is the leave considered taken?
 When the leave is approved?

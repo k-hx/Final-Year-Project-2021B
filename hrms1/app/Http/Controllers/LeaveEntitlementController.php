@@ -38,6 +38,9 @@ class LeaveEntitlementController extends Controller
          'num_of_days'=>$r->num_of_days,
       ]);
 
+      //update employee's leave record
+      
+
       Session::flash('success',"Leave entitlement added successfully!");
       return redirect()->route('leaveEntitlement', ['id' => $id]);
    }
@@ -71,6 +74,9 @@ class LeaveEntitlementController extends Controller
       $leaveEntitlements->num_of_days=$r->num_of_days;
       $leaveEntitlements->save();
 
+      //update employee's leave record
+
+
       Session::flash('success',"Leave entitlement updated successfully!");
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
    }
@@ -78,6 +84,9 @@ class LeaveEntitlementController extends Controller
    public function deleteLeaveEntitlement($leaveGradeId,$id) {
       $leaveEntitlements=LeaveEntitlement::find($id);
       $leaveEntitlements->delete();
+
+      //update employee's leave record
+
 
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
    }
