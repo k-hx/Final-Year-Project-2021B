@@ -21,6 +21,7 @@ class CreateEmployeeLeavesTable extends Migration
             $table->string('leaves_taken');
             $table->string('remaining_days');
             $table->string('year');
+            $table->string('status');
             $table->timestamps();
         });
     }

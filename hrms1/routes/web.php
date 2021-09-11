@@ -91,4 +91,3 @@ Route::get('setEmployeesLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeControl
 Route::post('setEmployeesLeaveGrade/update',[App\Http\Controllers\LeaveGradeController::class, 'updateEmployeesLeaveGrade'])->name('updateEmployeesLeaveGrade');
 
 // debugging use -----------------------------------------------------------
-Route::get('debuggingPage',[App\Http\Controllers\LeaveGradeController::class, 'debuggingFunction'])->name('debuggingPage');
