@@ -1,0 +1,13 @@
+-----------Leave grade controller (function delete)--------------
+$employees=Employee::all()->where('leave_grade',$id);
+foreach($employees as $employee) {
+   $employee->leave_grade='Unassigned';
+   $employee->save();
+}
+
+$leaveGradeHistories=LeaveGradeHistory::all()->where('leave_grade',$id);
+foreach($leaveGradeHistories as $leaveGradeHistory) {
+   $leaveGradeHistory->effective_until=Carbon::now();
+   $leaveGradeHistory->save();
+}
+-----------------------------------------------------------------

@@ -65,23 +65,7 @@ class LeaveGradeController extends Controller
       $leaveGrades->status='Deleted';
       $leaveGrades->save();
 
-      $employees=Employee::all()->where('leave_grade',$id);
-      foreach($employees as $employee) {
-         $employee->leave_grade='Unassigned';
-         $employee->save();
-      }
-
-      $leaveGradeHistories=LeaveGradeHistory::all()->where('leave_grade',$id);
-      foreach($leaveGradeHistories as $leaveGradeHistory) {
-         $leaveGradeHistory->effective_until=Carbon::now();
-         $leaveGradeHistory->save();
-      }
-
-      
-
-      //update employees' leave record
-
-
+      Session::flash('success',"Leave grade deleted successfully!");
       return redirect()->route('showLeaveGrades');
    }
 
@@ -270,9 +254,45 @@ class LeaveGradeController extends Controller
             }
          }
       }
+
       Session::flash('success',"Leave grade assigned successfully!");
       return redirect()->route('allEmployeesLeaveGrade');
    }
 
+
+   //temporary
+   public function dismissal($id) {
+      //find the employee's last leave grade history
+      $lastLeaveGradeHistories=DB::table('leave_grade_histories')
+      ->where('employee','=',$id)
+      ->whereNull('effective_until')
+      ->get();
+
+      //update "effective_until" for the employee's last leave grade history
+      foreach($lastLeaveGradeHistories as $lastLeaveGradeHistory) {
+         $id=$lastLeaveGradeHistory->id;
+         $lastLeaveGradeHistory=LeaveGradeHistory::find($id);
+         $lastLeaveGradeHistory->effective_until=Carbon::now();
+         $lastLeaveGradeHistory->save();
+      }
+
+      //find the employee's last leave records for present years
+      $employeeLeaves=DB::table('employee_leaves')
+      ->where('employee','=',$r->employee)
+      ->where('year','=',Carbon::now()->format('Y'))
+      ->get();
+
+      foreach($employeeLeaves as $employeeLeave) {
+         //find each employeeLeave record with its id
+         $employeeLeaveId=$employeeLeave->id;
+         $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+         if($employeeLeave->name!=="Annual Leave") {
+            $employeeLeave->status='Invalid';
+            $employeeLeave->save();
+         }
+      }
+      //then on the day of end of service, set to invalid??
+   }
 
 }

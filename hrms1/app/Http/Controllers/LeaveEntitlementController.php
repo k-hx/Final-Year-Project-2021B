@@ -38,12 +38,44 @@ class LeaveEntitlementController extends Controller
          'num_of_days'=>$r->num_of_days,
       ]);
 
-      //update employee's leave record
-      
+      $isExist=0;
+      $employees=Employee::all()->where('leave_grade',$r->id);
+      foreach($employees as $employee) {
+         $isExist=0;
+
+         $employeeLeaves=EmployeeLeave::all()
+         ->where('employee',$employee->id)
+         ->where('leave_type',$r->leaveType)
+         ->where('year',Carbon::now()->format('Y'));
+
+         if($employeeLeaves->isNotEmpty()) {
+            $isExits=1;
+            $employeeLeaves->total_days=$r->num_of_days;
+            $remaining_days=($r->num_of_days)-($employeeLeave->leaves_taken);
+            if($remaining_days<0) {
+               $remaining_days=0;
+            }
+            $employeeLeave->remaining_days=$remaining_days;
+            $employeeLeave->status='Valid';
+            $employeeLeave->save();
+         } else {
+            $createEmployeeLeave=EmployeeLeave::create([
+               'employee'=>$employee,
+               'leave_type'=>$r->leaveType,
+               'total_days'=>$r->num_of_days,
+               'leaves_taken'=>0,
+               'remaining_days'=>$r->num_of_days,
+               'year'=>Carbon::now()->format('Y'),
+               'status'=>'Valid',
+            ]);
+         }
+
+      }
 
       Session::flash('success',"Leave entitlement added successfully!");
       return redirect()->route('leaveEntitlement', ['id' => $id]);
    }
+
 
    public function edit($leaveGradeId,$id) {
       $leaveGrades=LeaveGrade::all()->where('id',$leaveGradeId);
@@ -87,7 +119,7 @@ class LeaveEntitlementController extends Controller
 
       //update employee's leave record
 
-
+      Session::flash('success',"Leave entitlement deleted successfully!");
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
    }
 }

@@ -15,20 +15,25 @@ function validate(leaveGradeId) {
 
    @foreach($employees as $employee)
    $employeeLeaveGrade={{ $employee->leave_grade }}
-   if({{ $employeeLeaveGrade }}==leaveGradeId) {
-      number=1;
+   if($employeeLeaveGrade==leaveGradeId) {
+      number=number+1;
    }
    @endforeach
 
-   var leaveGradeName="";
-   @foreach($leaveGrades as $leaveGrade)
-   if({{ $leaveGrade->id }}==leaveGradeId) {
-      leaveGradeName={{ $leaveGrade->name }};
+   if(number!=0) {
+      alert('The leave grade is assigned to at least an employee!');
+      return false;
+   } else {
+      var leaveGradeName="";
+      @foreach($leaveGrades as $leaveGrade)
+      if({{ $leaveGrade->id }}==leaveGradeId) {
+         leaveGradeName="{{ $leaveGrade->name }}";
+      }
+      @endforeach
+
+      return confirm("Delete " + leaveGradeName + "?");
    }
-   @endforeach
-   
 }
-
 </script>
 
 <td><a href="{{ route('createLeaveGrade') }}" class="btn btn-primary">Create Leave Grade</a></td>
@@ -49,7 +54,7 @@ function validate(leaveGradeId) {
          <td>
             <a href="{{ route('editLeaveGradeName', ['id' => $leaveGrade->id]) }}" class="btn btn-warning" >Edit Leave Grade Name</a>
             <a href="{{ route('leaveEntitlement', ['id' => $leaveGrade->id]) }}" class="btn btn-info" >Leave Entitlement</a>
-            <a href="{{ route('deleteLeaveGrade', ['id' => $leaveGrade->id]) }}" class="btn btn-danger" onclick="validate({{ $leaveGrade->id }})" onclick="">Delete</a>
+            <a href="{{ route('deleteLeaveGrade', ['id' => $leaveGrade->id]) }}" class="btn btn-danger" onclick="return validate({{ $leaveGrade->id }})" onclick="">Delete</a>
          </td>
       </tr>
       @endforeach
