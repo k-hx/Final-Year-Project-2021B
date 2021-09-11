@@ -6,28 +6,31 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\LeaveType;
 use App\Models\LeaveGrade;
+use App\Models\Employee;
+use App\Models\EmployeeLeave;
 use App\Models\LeaveEntitlement;
 use Session;
+use Carbon\Carbon;
 
 class LeaveEntitlementController extends Controller
 {
    public function __construct() {
-        $this->middleware('auth');
+      $this->middleware('auth');
    }
 
    public function show($id) {
       $leaveGrades=LeaveGrade::all()->where('id',$id);
 
       $currentEntitlements=DB::table('leave_entitlements')
-                           ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
-                           ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
-                           ->where('leave_entitlements.leaveGrade','=',$id)
-                           ->orderBy('leave_types.id','asc')
-                           ->get();
+      ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
+      ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+      ->where('leave_entitlements.leaveGrade','=',$id)
+      ->orderBy('leave_types.id','asc')
+      ->get();
 
       return view('leaveEntitlement')->with('leaveGrades',$leaveGrades)
-                                          ->with('currentEntitlements',$currentEntitlements)
-                                          ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
+      ->with('currentEntitlements',$currentEntitlements)
+      ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
    }
 
    public function addLeaveEntitlement($id) {
@@ -38,19 +41,27 @@ class LeaveEntitlementController extends Controller
          'num_of_days'=>$r->num_of_days,
       ]);
 
-      $isExist=0;
-      $employees=Employee::all()->where('leave_grade',$r->id);
-      foreach($employees as $employee) {
-         $isExist=0;
+      $employees=DB::table('employees')
+      ->where('leave_grade',$r->id)
+      ->get();
 
-         $employeeLeaves=EmployeeLeave::all()
+      foreach($employees as $employee) {
+         $employeeId=$employee->id;
+         $employee=Employee::find($employeeId);
+
+         $employeeLeaves=DB::table('employee_leaves')
          ->where('employee',$employee->id)
          ->where('leave_type',$r->leaveType)
-         ->where('year',Carbon::now()->format('Y'));
+         ->where('year',Carbon::now()->format('Y'))
+         ->get();
 
-         if($employeeLeaves->isNotEmpty()) {
-            $isExits=1;
-            $employeeLeaves->total_days=$r->num_of_days;
+         $number=0;
+
+         foreach($employeeLeaves as $employeeLeave) {
+            $number=$number+1;
+            $employeeLeaveId=$employeeLeave->id;
+            $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+            $employeeLeave->total_days=$r->num_of_days;
             $remaining_days=($r->num_of_days)-($employeeLeave->leaves_taken);
             if($remaining_days<0) {
                $remaining_days=0;
@@ -58,9 +69,11 @@ class LeaveEntitlementController extends Controller
             $employeeLeave->remaining_days=$remaining_days;
             $employeeLeave->status='Valid';
             $employeeLeave->save();
-         } else {
+         }
+
+         if($number==0) {
             $createEmployeeLeave=EmployeeLeave::create([
-               'employee'=>$employee,
+               'employee'=>$employee->id,
                'leave_type'=>$r->leaveType,
                'total_days'=>$r->num_of_days,
                'leaves_taken'=>0,
@@ -69,7 +82,6 @@ class LeaveEntitlementController extends Controller
                'status'=>'Valid',
             ]);
          }
-
       }
 
       Session::flash('success',"Leave entitlement added successfully!");
@@ -81,21 +93,21 @@ class LeaveEntitlementController extends Controller
       $leaveGrades=LeaveGrade::all()->where('id',$leaveGradeId);
 
       $currentEntitlements=DB::table('leave_entitlements')
-                           ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
-                           ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
-                           ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
-                           ->get();
+      ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
+      ->select('leave_entitlements.leaveType as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
+      ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
+      ->get();
 
       $leaveEntitlements=DB::table('leave_entitlements')
-                        ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
-                        ->select('leave_types.name as leaveTypeName','leave_entitlements.*')
-                        ->where('leave_entitlements.id','=',$id)
-                        ->get();
+      ->leftjoin('leave_types','leave_types.id','=','leave_entitlements.leaveType')
+      ->select('leave_types.name as leaveTypeName','leave_entitlements.*')
+      ->where('leave_entitlements.id','=',$id)
+      ->get();
 
       return view('editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
-                                          ->with('leaveEntitlements',$leaveEntitlements)
-                                          ->with('currentEntitlements',$currentEntitlements)
-                                          ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
+      ->with('leaveEntitlements',$leaveEntitlements)
+      ->with('currentEntitlements',$currentEntitlements)
+      ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
    }
 
    public function updateLeaveEntitlement($leaveGradeId,$id) {

@@ -45,11 +45,9 @@
                   @endif
                @endforeach
 
-
-               @if($added==0)
+               @if($added==0 && $leaveType->status!='Deleted')
                <option value="{{ $leaveType->id }}">{{ $leaveType->name }}</option>
                @endif
-
 
             @endforeach
          </select>

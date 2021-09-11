@@ -18,10 +18,10 @@ Route::get('createLeaveType', function() {
 Route::post('createLeaveType/store', [App\Http\Controllers\LeaveTypeController::class, 'store'])->name('addLeaveType')->middleware('auth');
 
 // display leave types -----------------------------------------------------------
-Route::get('leaveTypes', [App\Http\Controllers\LeaveTypeController::class, 'show'])->name('showLeaveTypes');
+Route::get('leaveType', [App\Http\Controllers\LeaveTypeController::class, 'show'])->name('showLeaveTypes');
 
 // edit leave type -----------------------------------------------------------
-Route::get('leaveTypes/edit/{id}', [App\Http\Controllers\LeaveTypeController::class, 'edit'])->name('editLeaveType');
+Route::get('leaveType/edit/{id}', [App\Http\Controllers\LeaveTypeController::class, 'edit'])->name('editLeaveType');
 
 Route::post('leaveType/update', [App\Http\Controllers\LeaveTypeController::class, 'update'])->name('updateLeaveType');
 
