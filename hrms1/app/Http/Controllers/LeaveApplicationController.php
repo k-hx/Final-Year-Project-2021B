@@ -92,6 +92,8 @@ class LeaveApplicationController extends Controller
       $leaveApplications->status='Approved';
       $leaveApplications->save();
 
+      
+
       return redirect()->route('showLeaveApplicationListAdmin');
    }
 

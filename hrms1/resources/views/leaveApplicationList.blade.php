@@ -12,8 +12,8 @@
       <tr>
          <th>Leave Application ID</th>
          <th>Leave Type</th>
-         <th>Start Date Time</th>
-         <th>End Date Time</th>
+         <th>Start Date</th>
+         <th>End Date</th>
          <th>Leave Approver</th>
          <th>Status</th>
          <th>Reason</th>
@@ -38,7 +38,12 @@
             @endif
          </td>
          <td>
-            @if ($leaveApplication->status !== 'Leave Taken' && $leaveApplication->status !== 'Cancelled')
+            @php
+               $today=date("Y-m-d");
+               $leaveDate=$leaveApplication->start_date;
+            @endphp
+            
+            @if (($today >= $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
             <a href="{{ route('cancelLeave', ['id' => $leaveApplication->id])}}" class="btn btn-danger" onclick="return confirm('Cancel this leave application?')">Cancel</a>
             @else
             -

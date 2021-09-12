@@ -6,31 +6,59 @@
 <script type="text/javascript">
 
 function checkAndCalculate() {
-   var currentDate = new Date();
 
-   var startDateInput = document.getElementById("startDate").value;
-   var startDate = Date.parse(startDateInput);
+   //get selected leave type
+   var selectedLeaveType = document.getElementById("leaveType");
+   var result = selectedLeaveType.options[selectedLeaveType.selectedIndex].value;
 
-   var endDateInput = document.getElementById("endDate").value;
-   var endDate = Date.parse(endDateInput);
-
-   if(currentDate > startDate) {
-      alert("The start date cannot be later than today's date!");
-      document.getElementById("startDate").value = "";
-   } else if(currentDate > endDate) {
-      alert("The end date cannot be later than today's date!");
-      document.getElementById("endDate").value = "";
-   } else if(startDate > endDate) {
-      alert("The end date cannot be earlier than the start date!");
-      document.getElementById("endDate").value = "";
-   } else {
-      var difference = endDate - startDate;
-      var dayDifference = (difference / (1000 * 60 * 60 * 24)) + 1;
-      if(isNaN(dayDifference)) {
-         dayDifference = 0;
-      }
-      alert(dayDifference);
+   //get remaining days for the leave type
+   var employeeLeaveRemainingDays;
+   @foreach($employeeLeaves as $employeeLeave)
+   var leaveType = "{{ $employeeLeave->leave_type }}";
+   if(result===leaveType) {
+      employeeLeaveRemainingDays = {{ $employeeLeave->remaining_days }};
    }
+   @endforeach
+
+   if(employeeLeaveRemainingDays === 0) {
+      document.getElementById("startDate").value = "";
+      document.getElementById("endDate").value = "";
+      alert("You have no remaining leave entitlement for this leave type! \nPlease apply unpaid leave!");
+   } else {
+      var currentDate = new Date();
+
+      var startDateInput = document.getElementById("startDate").value;
+      var startDate = Date.parse(startDateInput);
+
+      var endDateInput = document.getElementById("endDate").value;
+      var endDate = Date.parse(endDateInput);
+
+      if(currentDate > startDate) {
+         alert("The start date cannot be later than today's date!");
+         document.getElementById("startDate").value = "";
+      } else if(currentDate > endDate) {
+         alert("The end date cannot be later than today's date!");
+         document.getElementById("endDate").value = "";
+      } else if(startDate > endDate) {
+         alert("The end date cannot be earlier than the start date!");
+         document.getElementById("endDate").value = "";
+      } else {
+         var difference = endDate - startDate;
+         var dayDifference = (difference / (1000 * 60 * 60 * 24)) + 1;
+
+         //if users have not select any of the dates
+         if(isNaN(dayDifference)) {
+            dayDifference = 0;
+         }
+
+         if(dayDifference > employeeLeaveRemainingDays) {
+            //compare remaining days with day difference
+            document.getElementById("endDate").value = "";
+            alert("Your remaining leave entitlement for the leave type is not enough! \nPlease apply unpaid leave!");
+         }
+      }
+   }
+
 }
 
 function changeEmployeeLeave() {
@@ -38,7 +66,13 @@ function changeEmployeeLeave() {
    var result = selectedLeaveType.options[selectedLeaveType.selectedIndex].value;
 
    @foreach($employeeLeaves as $employeeLeave)
-
+   if("{{ $employeeLeave->leave_type }}" === result) {
+      document.getElementById("employeeLeaveLeaveType").innerHTML="{{ $employeeLeave->leave_type }}";
+      document.getElementById("employeeLeaveLeaveTypeName").innerHTML="{{ $employeeLeave->leaveTypeName }}";
+      document.getElementById("employeeLeaveTotalDays").innerHTML="{{ $employeeLeave->total_days }}";
+      document.getElementById("employeeLeaveLeavesTaken").innerHTML="{{ $employeeLeave->leaves_taken }}";
+      document.getElementById("employeeLeaveRemainingDays").innerHTML="{{ $employeeLeave->remaining_days }}";
+   }
    @endforeach
 
 }
@@ -52,7 +86,7 @@ function changeEmployeeLeave() {
 
       <p>
          <label for="leaveType" class="label">Leave Type</label>
-         <select class="form-control" name="leaveTypeId" id="leaveType" onchange="changeEmployeeLeave()" required>
+         <select class="form-control" name="leaveTypeId" id="leaveType" onchange="changeEmployeeLeave();checkAndCalculate()" required>
             @foreach($employeeLeaves as $employeeLeave)
             <option value="{{ $employeeLeave->leave_type }}">{{ $employeeLeave->leaveTypeName}}</option>
             @endforeach
@@ -73,11 +107,11 @@ function changeEmployeeLeave() {
          @if($number==0)
             @php $number=$number+1; @endphp
             <tr>
-               <td id="employeeLeaveId">{{ $employeeLeave->id }}</td>
-               <td>{{ $employeeLeave->leaveTypeName }}</td>
-               <td>{{ $employeeLeave->total_days }}</td>
-               <td>{{ $employeeLeave->leaves_taken }}</td>
-               <td>{{ $employeeLeave->remaining_days }}</td>
+               <td id="employeeLeaveLeaveType">{{ $employeeLeave->leave_type }}</td>
+               <td id="employeeLeaveLeaveTypeName">{{ $employeeLeave->leaveTypeName }}</td>
+               <td id="employeeLeaveTotalDays">{{ $employeeLeave->total_days }}</td>
+               <td id="employeeLeaveLeavesTaken">{{ $employeeLeave->leaves_taken }}</td>
+               <td id="employeeLeaveRemainingDays">{{ $employeeLeave->remaining_days }}</td>
             </tr>
          @endif
          @endforeach
