@@ -25,8 +25,8 @@
          <td>{{ $leaveApplication->id }}</td>
          <td>{{ $leaveApplication->leaveTypeName }}</td>
          <td>{{ $leaveApplication->employee }} {{ $leaveApplication->employeeName }}</td>
-         <td>{{ $leaveApplication->start_date_time }}</td>
-         <td>{{ $leaveApplication->end_date_time }}</td>
+         <td>{{ $leaveApplication->start_date }}</td>
+         <td>{{ $leaveApplication->end_date }}</td>
          <td>{{ $leaveApplication->status }}</td>
          <td>{{ $leaveApplication->reason }}</td>
          <td>
