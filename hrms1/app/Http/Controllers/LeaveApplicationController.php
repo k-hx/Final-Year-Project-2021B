@@ -92,7 +92,18 @@ class LeaveApplicationController extends Controller
       $leaveApplications->status='Approved';
       $leaveApplications->save();
 
-      
+      //update leave taken
+      $employeeLeaves=DB::table('employee_leaves')
+      ->where('employee','=',$employeeId)
+      ->where('leave_type','=',$leaveApplications->leave_type_id)
+      ->where('year','=',Carbon::now()->format('Y'))
+      ->get();
+
+      foreach($employeeLeaves as $employeeLeave) {
+         $employeeLeaveId=$employeeLeave->id;
+         $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+         // $employeeLeave->leaves_taken=
+      }
 
       return redirect()->route('showLeaveApplicationListAdmin');
    }

@@ -23,7 +23,7 @@ function checkAndCalculate() {
    if(employeeLeaveRemainingDays === 0) {
       document.getElementById("startDate").value = "";
       document.getElementById("endDate").value = "";
-      alert("You have no remaining leave entitlement for this leave type! \nPlease apply unpaid leave!");
+      alert("You have no remaining leave entitlement for this leave type! \nPlease apply for unpaid leaves for the exceeded days!");
    } else {
       var currentDate = new Date();
 
@@ -54,11 +54,10 @@ function checkAndCalculate() {
          if(dayDifference > employeeLeaveRemainingDays) {
             //compare remaining days with day difference
             document.getElementById("endDate").value = "";
-            alert("Your remaining leave entitlement for the leave type is not enough! \nPlease apply unpaid leave!");
+            alert("Your remaining leave entitlement for the leave type is not enough! \nPlease apply for unpaid leaves for the exceeded days!");
          }
       }
    }
-
 }
 
 function changeEmployeeLeave() {
@@ -74,7 +73,6 @@ function changeEmployeeLeave() {
       document.getElementById("employeeLeaveRemainingDays").innerHTML="{{ $employeeLeave->remaining_days }}";
    }
    @endforeach
-
 }
 
 </script>

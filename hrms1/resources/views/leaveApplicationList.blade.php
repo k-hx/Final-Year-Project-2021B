@@ -42,8 +42,8 @@
                $today=date("Y-m-d");
                $leaveDate=$leaveApplication->start_date;
             @endphp
-            
-            @if (($today >= $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
+
+            @if (($today < $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
             <a href="{{ route('cancelLeave', ['id' => $leaveApplication->id])}}" class="btn btn-danger" onclick="return confirm('Cancel this leave application?')">Cancel</a>
             @else
             -
