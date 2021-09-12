@@ -1,0 +1,57 @@
+public function addLeaveEntitlement($id) {
+   $r=request();
+   $addLeaveEntitlements=LeaveEntitlement::create([
+      'leaveGrade'=>$r->id,
+      'leaveType'=>$r->leaveType,
+      'num_of_days'=>$r->num_of_days,
+   ]);
+
+   //find employees with the leave grade
+   $employees=DB::table('employees')
+   ->where('leave_grade',$r->id)
+   ->get();
+
+   $number=0;
+
+   foreach($employees as $employee) {
+      $employeeId=$employee->id;
+      $employee=Employee::find($employeeId);
+
+      $employeeLeaves=DB::table('employee_leaves')
+      ->where('employee',$employee->id)
+      ->where('leave_type',$r->leaveType)
+      ->where('year',Carbon::now()->format('Y'))
+      ->get();
+
+      $number=0;
+
+      foreach($employeeLeaves as $employeeLeave) {
+         $number=1;
+         $employeeLeaveId=$employeeLeave->id;
+         $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+         $employeeLeave->total_days=$r->num_of_days;
+         $remaining_days=($r->num_of_days)-($employeeLeave->leaves_taken);
+         if($remaining_days<0) {
+            $remaining_days=0;
+         }
+         $employeeLeave->remaining_days=$remaining_days;
+         $employeeLeave->status='Valid';
+         $employeeLeave->save();
+      }
+
+      if($number==0) {
+         $createEmployeeLeave=EmployeeLeave::create([
+            'employee'=>$employee->id,
+            'leave_type'=>$r->leaveType,
+            'total_days'=>$r->num_of_days,
+            'leaves_taken'=>0,
+            'remaining_days'=>$r->num_of_days,
+            'year'=>Carbon::now()->format('Y'),
+            'status'=>'Valid',
+         ]);
+      }
+   }
+
+   Session::flash('success',"Leave entitlement added successfully!");
+   return redirect()->route('leaveEntitlement', ['id' => $id]);
+}

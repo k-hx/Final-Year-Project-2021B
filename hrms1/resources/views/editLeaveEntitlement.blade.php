@@ -4,6 +4,12 @@
 
 @section('content')
 
+@if(Session::has('success'))
+    <div class="alert alert-success" role="alert">
+        {{ Session::get('success')}}
+    </div>
+@endif
+
 @foreach($leaveGrades as $leaveGrade)
 <a href="{{ route('leaveEntitlement', ['id' => $leaveGrade->id]) }}" class="btn btn-info">Back</a>
 

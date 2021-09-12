@@ -34,21 +34,28 @@ class LeaveEntitlementController extends Controller
    }
 
    public function addLeaveEntitlement($id) {
+      //request data from the form
       $r=request();
+
+      //create the leave entitlement in the leave entitlement table
       $addLeaveEntitlements=LeaveEntitlement::create([
          'leaveGrade'=>$r->id,
          'leaveType'=>$r->leaveType,
          'num_of_days'=>$r->num_of_days,
       ]);
 
+      //find employees with the leave grade
       $employees=DB::table('employees')
       ->where('leave_grade',$r->id)
       ->get();
 
+      //for each employee who is assigned with the leave grade
       foreach($employees as $employee) {
+         //find the employee with the employee id
          $employeeId=$employee->id;
          $employee=Employee::find($employeeId);
 
+         //find their related leave record (same leave type, present year)
          $employeeLeaves=DB::table('employee_leaves')
          ->where('employee',$employee->id)
          ->where('leave_type',$r->leaveType)
@@ -56,11 +63,14 @@ class LeaveEntitlementController extends Controller
          ->get();
 
          $number=0;
-
          foreach($employeeLeaves as $employeeLeave) {
             $number=$number+1;
+
+            //find the employee leave with the employee leave id
             $employeeLeaveId=$employeeLeave->id;
             $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+            //update the record
             $employeeLeave->total_days=$r->num_of_days;
             $remaining_days=($r->num_of_days)-($employeeLeave->leaves_taken);
             if($remaining_days<0) {
@@ -71,7 +81,8 @@ class LeaveEntitlementController extends Controller
             $employeeLeave->save();
          }
 
-         if($number==0) {
+         if($number===0) {
+            //create employee leave record
             $createEmployeeLeave=EmployeeLeave::create([
                'employee'=>$employee->id,
                'leave_type'=>$r->leaveType,
@@ -85,7 +96,7 @@ class LeaveEntitlementController extends Controller
       }
 
       Session::flash('success',"Leave entitlement added successfully!");
-      return redirect()->route('leaveEntitlement', ['id' => $id]);
+      return redirect()->route('leaveEntitlement', ['id' => $id]);      
    }
 
 
