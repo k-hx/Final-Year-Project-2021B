@@ -17,8 +17,8 @@ class CreateLeaveApplicationsTable extends Migration
             $table->id();
             $table->string('employee');
             $table->string('leave_type_id');
-            $table->dateTime('start_date_time');
-            $table->dateTime('end_date_time');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->string('reason');
             $table->string('document');
             $table->string('status');

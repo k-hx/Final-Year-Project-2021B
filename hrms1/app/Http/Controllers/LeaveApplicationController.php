@@ -7,9 +7,11 @@ use DB;
 use App\Models\LeaveApplication;
 use App\Models\Admin;
 use App\Models\Employee;
+use App\Models\EmployeeLeave;
 use App\Models\LeaveType;
 use Session;
 Use Auth;
+use Carbon\Carbon;
 
 class LeaveApplicationController extends Controller
 {
@@ -19,8 +21,17 @@ class LeaveApplicationController extends Controller
 
    public function showApplyLeavePage() {
       $employees=Employee::all()->where('id',Auth::id());
+      $employeeLeaves=DB::table('employee_leaves')
+      ->leftjoin('leave_types','leave_types.id','employee_leaves.leave_type')
+      ->where('employee',Auth::id())
+      ->where('year',Carbon::now()->format('Y'))
+      ->where('employee_leaves.status','=','Valid')
+      ->select('leave_types.name as leaveTypeName','employee_leaves.*')
+      ->orderBy('leave_types.name','asc')
+      ->get();
+
       return view('applyLeave')->with('employees',$employees)
-                              ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
+                              ->with('employeeLeaves',$employeeLeaves);
    }
 
    public function submitApplication() {
@@ -38,8 +49,8 @@ class LeaveApplicationController extends Controller
          'employee'=>$r->employee,
          'leave_type_id'=>$r->leaveTypeId,
          'leave_type_name'=>$r->leaveTypeName,
-         'start_date_time'=>$r->startDateTime,
-         'end_date_time'=>$r->endDateTime,
+         'start_date'=>$r->startDate,
+         'end_date'=>$r->endDate,
          'reason'=>$r->reason,
          'document'=>$documentName,
          'status'=>'Applied',

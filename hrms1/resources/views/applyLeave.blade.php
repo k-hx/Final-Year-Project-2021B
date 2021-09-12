@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('content')
 
+<link rel="stylesheet" href="{{ asset('css/style2.css') }}">
+
+@section('content')
 <script type="text/javascript">
-   function setLeaveTypeName(name) {
-      document.getElementById('leaveTypeName').value="name";
-   }
+
 </script>
 
 <h1>Leave Application</h1>
@@ -15,16 +15,30 @@
       <p>
          <label for="leaveType" class="label">Leave Type</label>
          <select class="form-control" name="leaveTypeId" required>
-            @foreach($leaveTypes as $leaveType)
-            <option value="{{ $leaveType->id }}" onselect="setLeaveTypeName({{ $leaveType->name }})">{{ $leaveType->name}}</option>
+            @foreach($employeeLeaves as $employeeLeave)
+            <option value="{{ $employeeLeave->leave_type }}">{{ $employeeLeave->leaveTypeName}}</option>
             @endforeach
          </select>
-         <input type="hidden" id="leaveTypeName" name="leaveTypeName" value="aLeaveType">
       </p>
 
-      <p>
-         <label for="leaveBalance" style="color:red;">Leave Balance</label>
-      </p>
+      <table style="margin:auto;text-align:center;">
+         <tr>
+            <th>Leave Type ID</th>
+            <th>Total Days</th>
+            <th>Number of Leaves Taken</th>
+            <th>Remaining Days</th>
+         </tr>
+
+         @foreach($employeeLeaves as $employeeLeave)
+         <tr id="rowFor{{ $employeeLeave->id }}">
+            <td id="{{ $employeeLeave->id }}">{{ $employeeLeave->id }}</td>
+            <td>{{ $employeeLeave->total_days }}</td>
+            <td>{{ $employeeLeave->leaves_taken }}</td>
+            <td>{{ $employeeLeave->remaining_days }}</td>
+         </tr>
+         @endforeach
+
+      </table>
 
       @foreach($employees as $employee)
       <input type="hidden" name="employee" value="{{ $employee->id }}">
@@ -32,18 +46,18 @@
       @endforeach
 
       <p>
-         <label for="startDateTime" class="label">Start date time</label>
-         <input type="datetime-local" name="startDateTime" id="startDateTime" required>
+         <label for="startDate" class="label">Start date</label>
+         <input type="date" name="startDate" id="startDate" required>
       </p>
 
       <p>
-         <label for="endDateTime" class="label">End date time</label>
-         <input type="datetime-local" name="endDateTime" id="endDateTime" required>
+         <label for="endDate" class="label">End date</label>
+         <input type="date" name="endDate" id="endDate" required>
       </p>
 
       <p>
          <label for="reason" class="label">Reason</label>
-         <textarea name="reason" rows="8" cols="20" required></textarea>
+         <textarea name="reason" rows="8" cols="30" required></textarea>
       </p>
 
       <p>
