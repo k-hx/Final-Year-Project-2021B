@@ -44,6 +44,7 @@ class LeaveEntitlementController extends Controller
          'num_of_days'=>$r->num_of_days,
       ]);
 
+      //update employee's leave ------------------------------------------------
       //find employees with the leave grade
       $employees=DB::table('employees')
       ->where('leave_grade',$r->id)
@@ -96,7 +97,7 @@ class LeaveEntitlementController extends Controller
       }
 
       Session::flash('success',"Leave entitlement added successfully!");
-      return redirect()->route('leaveEntitlement', ['id' => $id]);      
+      return redirect()->route('leaveEntitlement', ['id' => $id]);
    }
 
 
@@ -129,8 +130,42 @@ class LeaveEntitlementController extends Controller
       $leaveEntitlements->num_of_days=$r->num_of_days;
       $leaveEntitlements->save();
 
-      //update employee's leave record
+      //update employee's leave record -----------------------------------------
+      //find employees with the leave grade
+      $employees=DB::table('employees')
+      ->where('leave_grade',$leaveGradeId)
+      ->get();
 
+      //for each employee who is assigned with the leave grade
+      foreach($employees as $employee) {
+         //find the employee with the employee id
+         $employeeId=$employee->id;
+         $employee=Employee::find($employeeId);
+
+         //find their related leave record (same leave type, present year)
+         $employeeLeaves=DB::table('employee_leaves')
+         ->where('employee',$employee->id)
+         ->where('leave_type',$r->leaveType)
+         ->where('year',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($employeeLeaves as $employeeLeave) {
+
+            //find the employee leave with the employee leave id
+            $employeeLeaveId=$employeeLeave->id;
+            $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+            //update the record
+            $employeeLeave->total_days=$r->num_of_days;
+            $remaining_days=($r->num_of_days)-($employeeLeave->leaves_taken);
+            if($remaining_days<0) {
+               $remaining_days=0;
+            }
+            $employeeLeave->remaining_days=$remaining_days;
+            $employeeLeave->status='Valid';
+            $employeeLeave->save();
+         }
+      }
 
       Session::flash('success',"Leave entitlement updated successfully!");
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
@@ -140,7 +175,8 @@ class LeaveEntitlementController extends Controller
       $leaveEntitlements=LeaveEntitlement::find($id);
       $leaveEntitlements->delete();
 
-      //update employee's leave record
+      //update employee's leave record -----------------------------------------
+
 
       Session::flash('success',"Leave entitlement deleted successfully!");
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);

@@ -39,7 +39,8 @@ public function addLeaveEntitlement($id) {
          $employeeLeave->save();
       }
 
-      if($number==0) {
+      if($number===0) {
+      //just because of "==="?
          $createEmployeeLeave=EmployeeLeave::create([
             'employee'=>$employee->id,
             'leave_type'=>$r->leaveType,

@@ -7,7 +7,5 @@
 <p>Employee ID: {{ $employeeLeave->employee }}</p>
 <p>Leave type ID: {{ $employeeLeave->leave_type }}</p>
 @endforeach
-
-<p>Number: {{ $number }}</p>
 </div>
 @endsection
