@@ -173,10 +173,39 @@ class LeaveEntitlementController extends Controller
 
    public function deleteLeaveEntitlement($leaveGradeId,$id) {
       $leaveEntitlements=LeaveEntitlement::find($id);
-      $leaveEntitlements->delete();
-
+      
       //update employee's leave record -----------------------------------------
+      //find employees with the leave grade
+      $employees=DB::table('employees')
+      ->where('leave_grade',$leaveGradeId)
+      ->get();
 
+      //for each employee who is assigned with the leave grade
+      foreach($employees as $employee) {
+         //find the employee with the employee id
+         $employeeId=$employee->id;
+         $employee=Employee::find($employeeId);
+
+         //find their related leave record (same leave type, present year)
+         $employeeLeaves=DB::table('employee_leaves')
+         ->where('employee',$employee->id)
+         ->where('leave_type',$leaveEntitlements->leaveType)
+         ->where('year',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($employeeLeaves as $employeeLeave) {
+
+            //find the employee leave with the employee leave id
+            $employeeLeaveId=$employeeLeave->id;
+            $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+            //update the record
+            $employeeLeave->status='Invalid';
+            $employeeLeave->save();
+         }
+      }
+
+      $leaveEntitlements->delete();
 
       Session::flash('success',"Leave entitlement deleted successfully!");
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
