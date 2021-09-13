@@ -16,11 +16,12 @@ use Carbon\Carbon;
 class LeaveApplicationController extends Controller
 {
    public function __construct() {
-        $this->middleware('auth');
+      $this->middleware('auth');
    }
 
    public function showApplyLeavePage() {
       $employees=Employee::all()->where('id',Auth::id());
+
       $employeeLeaves=DB::table('employee_leaves')
       ->leftjoin('leave_types','leave_types.id','employee_leaves.leave_type')
       ->where('employee',Auth::id())
@@ -30,8 +31,13 @@ class LeaveApplicationController extends Controller
       ->orderBy('leave_types.name','asc')
       ->get();
 
+      $leaveApplications=DB::table('leave_applications')
+      ->where('employee',Auth::id())
+      ->where('status','=','Applied')
+      ->get();
+
       return view('employee/applyLeave')->with('employees',$employees)
-                              ->with('employeeLeaves',$employeeLeaves);
+      ->with('employeeLeaves',$employeeLeaves);
    }
 
    public function submitApplication() {
@@ -65,27 +71,27 @@ class LeaveApplicationController extends Controller
    public function showLeaveApplicationList() {
       $employees=Employee::all()->where('id',Auth::id());
       $leaveApplications=DB::table('leave_applications')
-                        ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
-                        ->leftjoin('admins','admins.id','=','leave_applications.leave_approver')
-                        ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
-                        ->where('leave_applications.employee','=',Auth::id())
-                        ->orderBy('id','asc')
-                        ->get();
+      ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
+      ->leftjoin('admins','admins.id','=','leave_applications.leave_approver')
+      ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
+      ->where('leave_applications.employee','=',Auth::id())
+      ->orderBy('id','asc')
+      ->get();
 
       return view('employee/leaveApplicationList')->with('employees',$employees)
-                              ->with('leaveApplications',$leaveApplications);
+      ->with('leaveApplications',$leaveApplications);
    }
 
    public function showLeaveApplicationListAdmin() {
       $admins=Admin::all()->where('id',Auth::id());
       $leaveApplications=DB::table('leave_applications')
-                        ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
-                        ->leftjoin('employees','employees.id','=','leave_applications.employee')
-                        ->select('leave_types.name as leaveTypeName','employees.id as employeeId','employees.full_name as employeeName','leave_applications.*')
-                        ->where('leave_applications.leave_approver','=',Auth::id())
-                        ->get();
+      ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
+      ->leftjoin('employees','employees.id','=','leave_applications.employee')
+      ->select('leave_types.name as leaveTypeName','employees.id as employeeId','employees.full_name as employeeName','leave_applications.*')
+      ->where('leave_applications.leave_approver','=',Auth::id())
+      ->get();
       return view('admin/leaveApplicationList')->with('admins',$admins)
-                              ->with('leaveApplications',$leaveApplications);
+      ->with('leaveApplications',$leaveApplications);
    }
 
    public function approve($employeeId,$id) {

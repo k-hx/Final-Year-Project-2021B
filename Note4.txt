@@ -1,0 +1,164 @@
+Continues here ...
+Add checkbox
+create unpaid leave in employee_leaves table when creating employee
+Update status for expired leave application???
+
+Important!
+1. Multi-user Login
+
+Primary
+9. when apply/approve multiple leave, days may exceed remaining days!
+4. Show employee's leave data in the employee's leave grade page and apply leave page?
+5. Approve/Reject leave - checkbox
+7. Search function
+8. Pagination
+
+When apply/approve multiple leave, days may exceed remaining days
+Solution 1: when approving, check if exceed
+Solution 2: check pending leave application total days for the leave type. ★
+If exceeds limit when combining with current leave application, cannot.
+Solution 3: add to leaves taken when apply, deduct if is rejected
+
+Controller: get leave application of the employee (use Auth::id())
+View: add total days of leave applications for the selected leave type
+          -> when select leave type for the leave application
+          -> when select date
+
+Leave Problem
+Did not check holiday, weekend, overlap leave application, etc.
+Employee Leave Record is renewed every year, so when applying leave for the next year, it will be included in this year's record
+Haven't have update leave application status to "Expired" when date is passed
+
+Finished
+2. Employees leave grade -> unassigned?? or cannot delete?
+3. Refresh leave every year
+4. Effective until date time
+5. If delete leave grade -> status "Deleted"
+   because leave grade history needs its name
+6. delete leave grade id at the route, link, and function for addLeaveEntitlement (better don't)
+1. Cannot delete a leave grade when it is assigned to employee
+3. Change employee's leave when add/remove/edit number of days for leave entitlement for a leave grade and delete leave entitlement
+6. If no remaining days, change to unpaid leave?
+update leaves taken when cancel leave
+Unpaid leave -> create when creating the table (in the end I use database seeding)
+
+Unpaid Leave
+Add columns "paid_num_of_days" "unpaid_num_of_days" at leave application (is not applied now)
+Unpaid leave -> create when creating the table (in the end I use database seeding)
+Command:
+php artisan make:seeder LeaveTypeSeeder
+composer dump-autoload
+php artisan db:seed
+
+Status for employee's leave record
+change when changing leave grade ->
+leave type is not included in the leave entitlement of the leave grade
+change back if assign to another leave grade with the leave type
+
+Leave entitlement
+update when changing leave grade
+
+Update employee's leave
+-> when adding leave entitlement for a leave grade
+-> when changing leave grade
+-> when editing/updating leave entitlement for a leave grade
+-> when deleting a leave grade?? Can it be deleted?
+
+Update leaves taken
+When is the leave considered taken?
+When the leave is approved?
+Then if the leave is cancelled/rejected,
+check if it is approved before, then deduct if it is approved.
+what if the leave application expires?
+
+Update employee's leave grade after deleting a leave grade?
+Leave grade cannot be deleted when it is assigned to at least an employee. Case closed.
+
+Do they need a leave table for all employees?
+-> employee_leave table
+-> created when set leave grade for employee
+-> data field:
+     employee (employee ID)
+     leave_type (leave type ID)
+     total_days (if different from leave grade, customize?)
+     (for each if (leaveEntitlement->leaveType !== numOfDays isCustomize = true)
+     leaves_taken
+     remaining_days ??
+     year
+
+update when:
+add leave entitlements to leave grade
+edit leave entitlements of a leave grade
+delete leave entitlement of a leave grade
+
+
+Employee's leave grade history
+-> employee (employee ID)
+-> leave grade (leave grade ID)
+-> effective_from
+-> effective_until
+
+Change leave grade
+-> display all employees or only the employee?
+
+If change leave grade before year ends
+-> remaining_days
+     = new total days - (old total days - remaining days)
+deduct the leaves taken
+
+2. Employees' leave grade
+Set leave grade for employee
+Change employee's leave grade
+
+3. Apply leave
+paid leave OR unpaid leave
+calculate remaining leave
+If remaining days < 1 then cannot take the type of leave
+
+Renew leaves every year manually
+-> refresh button
+-> find employee leave grade
+-> create employee_leaves
+
+4. When employee is no longer working for the company, what should the leave grade be? (skipped)
+
+5. What if a leave application expires? (skipped)
+
+Pagination (skipped)
+show leave according to month, year
+
+Input select (skipped)
+no default like "Select xxxxx"
+
+Edit leave entitlement for individual employee
+after assign
+because I think it would be easier, hohoho
+
+1. Employees' leave
+View own leave grade
+use the Auth::id()???? method
+--------------------------------------------------
+
+2. Category of salary component
+Create
+Edit
+Delete
+
+3. Salary component
+Create salary component
+Edit salary component
+Delete salary component
+
+4. Pay grade
+Add salary component
+Remove salary component
+
+5. Payroll
+
+6. Calculate leaves taken
+for unpaid leave -> retrieve from leaves_application table?
+for other leave types -> retrieve from employee_leaves table
+
+
+
+Add relationship in model?
