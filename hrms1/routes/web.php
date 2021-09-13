@@ -73,8 +73,14 @@ Route::get('admin/leaveApplicationList', [App\Http\Controllers\LeaveApplicationC
 // approve leave -----------------------------------------------------------
 Route::get('admin/approveLeave/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'approve'])->name('approveLeave');
 
+// approve multiple leave -----------------------------------------------------------
+Route::get('admin/approveMultipleLeave', [App\Http\Controllers\LeaveApplicationController::class, 'approveMultiple'])->name('approveMultipleLeave');
+
 // reject leave -----------------------------------------------------------
 Route::get('admin/reject/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');
+
+// reject multiple leave -----------------------------------------------------------
+Route::get('admin/rejectMultipleLeave', [App\Http\Controllers\LeaveApplicationController::class, 'rejectMultiple'])->name('rejectMultipleLeave');
 
 // cancel leave -----------------------------------------------------------
 Route::get('leaveApplication/cancel/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');

@@ -93,7 +93,7 @@ class LeaveApplicationController extends Controller
       $leaveApplications->status='Approved';
       $leaveApplications->save();
 
-      //update leave taken
+      //update leave taken for the employee ------------------------------------
       $employeeLeaves=DB::table('employee_leaves')
       ->where('employee','=',$employeeId)
       ->where('leave_type','=',$leaveApplications->leave_type_id)
@@ -110,6 +110,35 @@ class LeaveApplicationController extends Controller
          $employeeLeave->save();
       }
 
+      return redirect()->route('showLeaveApplicationListAdmin');
+   }
+
+   public function approveMultiple() {
+      $r=request();
+
+      $leaveApplications=$r->input('leaveApplication');
+      foreach($leaveApplications as $leaveApplication => $value) {
+         $application=LeaveApplication::find($value);
+         $application->status='Approved';
+         $application->save();
+
+         $employeeId=$application->employee;
+         $employeeLeaves=DB::table('employee_leaves')
+         ->where('employee','=',$employeeId)
+         ->where('leave_type','=',$application->leave_type_id)
+         ->where('year','=',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($employeeLeaves as $employeeLeave) {
+            $employeeLeaveId=$employeeLeave->id;
+            $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+            $currentLeavesTaken=$employeeLeave->leaves_taken;
+            $employeeLeave->leaves_taken=$currentLeavesTaken+($application->num_of_days);
+            $employeeLeave->remaining_days=($employeeLeave->remaining_days)-($application->num_of_days);
+            $employeeLeave->save();
+         }
+      }
       return redirect()->route('showLeaveApplicationListAdmin');
    }
 
@@ -138,6 +167,39 @@ class LeaveApplicationController extends Controller
 
       $leaveApplications->status='Rejected';
       $leaveApplications->save();
+
+      return redirect()->route('showLeaveApplicationListAdmin');
+   }
+
+   public function rejectMultiple() {
+      $r=request();
+
+      $leaveApplications=$r->input('leaveApplication');
+      foreach($leaveApplications as $leaveApplication => $value) {
+         $application=LeaveApplication::find($value);
+         $previousStatus=$application->status;
+         $application->status='Rejected';
+         $application->save();
+
+         if($previousStatus = "Approved") {
+            $employeeId=$application->employee;
+            $employeeLeaves=DB::table('employee_leaves')
+            ->where('employee','=',$employeeId)
+            ->where('leave_type','=',$application->leave_type_id)
+            ->where('year','=',Carbon::now()->format('Y'))
+            ->get();
+
+            foreach($employeeLeaves as $employeeLeave) {
+               $employeeLeaveId=$employeeLeave->id;
+               $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+               $currentLeavesTaken=$employeeLeave->leaves_taken;
+               $employeeLeave->leaves_taken=$currentLeavesTaken-($application->num_of_days);
+               $employeeLeave->remaining_days=($employeeLeave->remaining_days)+($application->num_of_days);
+               $employeeLeave->save();
+            }
+         }
+      }
 
       return redirect()->route('showLeaveApplicationListAdmin');
    }

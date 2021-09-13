@@ -6,7 +6,7 @@
     </div>
 @endif
 
-<a href="{{ route('showApplyLeavePage') }}" class="btn btn-info">Apply Leave</a>
+<a href="{{ route('showApplyLeavePage') }}" class="btn btn-primary">Apply Leave</a>
 <div style="text-align:center">
    <table>
       <tr>

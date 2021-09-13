@@ -66,15 +66,22 @@ function changeEmployeeLeave() {
    var selectedLeaveType = document.getElementById("leaveType");
    var result = selectedLeaveType.options[selectedLeaveType.selectedIndex].value;
 
-   @foreach($employeeLeaves as $employeeLeave)
-   if("{{ $employeeLeave->leave_type }}" === result) {
-      document.getElementById("employeeLeaveLeaveType").innerHTML="{{ $employeeLeave->leave_type }}";
-      document.getElementById("employeeLeaveLeaveTypeName").innerHTML="{{ $employeeLeave->leaveTypeName }}";
-      document.getElementById("employeeLeaveTotalDays").innerHTML="{{ $employeeLeave->total_days }}";
-      document.getElementById("employeeLeaveLeavesTaken").innerHTML="{{ $employeeLeave->leaves_taken }}";
-      document.getElementById("employeeLeaveRemainingDays").innerHTML="{{ $employeeLeave->remaining_days }}";
+
+   if(result==0) {
+      document.getElementById("leaveInformation").hidden = true;
+   } else {
+      document.getElementById("leaveInformation").hidden = false;
+
+      @foreach($employeeLeaves as $employeeLeave)
+      if("{{ $employeeLeave->leave_type }}" === result) {
+         document.getElementById("employeeLeaveLeaveType").innerHTML="{{ $employeeLeave->leave_type }}";
+         document.getElementById("employeeLeaveLeaveTypeName").innerHTML="{{ $employeeLeave->leaveTypeName }}";
+         document.getElementById("employeeLeaveTotalDays").innerHTML="{{ $employeeLeave->total_days }}";
+         document.getElementById("employeeLeaveLeavesTaken").innerHTML="{{ $employeeLeave->leaves_taken }}";
+         document.getElementById("employeeLeaveRemainingDays").innerHTML="{{ $employeeLeave->remaining_days }}";
+      }
+      @endforeach
    }
-   @endforeach
 }
 
 </script>
@@ -89,11 +96,11 @@ function changeEmployeeLeave() {
          <select class="form-control" name="leaveTypeId" id="leaveType" onchange="changeEmployeeLeave();checkAndCalculate()" required>
             @foreach($employeeLeaves as $employeeLeave)
             <option value="{{ $employeeLeave->leave_type }}">{{ $employeeLeave->leaveTypeName}}</option>
-            @endforeach
+            @endforeach            
          </select>
       </p>
 
-      <table style="margin:auto;text-align:center;">
+      <table style="margin:auto;text-align:center;" id="leaveInformation">
          <tr>
             <th>Leave Type ID</th>
             <th>Leave Type Name</th>
