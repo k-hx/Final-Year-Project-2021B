@@ -71,10 +71,10 @@ Route::get('leaveApplicationList', [App\Http\Controllers\LeaveApplicationControl
 Route::get('admin/leaveApplicationList', [App\Http\Controllers\LeaveApplicationController::class, 'showLeaveApplicationListAdmin'])->name('showLeaveApplicationListAdmin');
 
 // approve leave -----------------------------------------------------------
-Route::get('admin/approveLeave/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'approve'])->name('approveLeave');
+Route::get('admin/approveLeave/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'approve'])->name('approveLeave');
 
 // reject leave -----------------------------------------------------------
-Route::get('admin/reject/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');
+Route::get('admin/reject/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');
 
 // cancel leave -----------------------------------------------------------
 Route::get('leaveApplication/cancel/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
@@ -89,5 +89,3 @@ Route::get('employeesLeave/{id}/{leaveGradeId}',[App\Http\Controllers\LeaveGrade
 Route::get('setEmployeesLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeController::class, 'setEmployeesLeaveGradePage'])->name('setEmployeesLeaveGrade');
 
 Route::post('setEmployeesLeaveGrade/update',[App\Http\Controllers\LeaveGradeController::class, 'updateEmployeesLeaveGrade'])->name('updateEmployeesLeaveGrade');
-
-// debugging use -----------------------------------------------------------

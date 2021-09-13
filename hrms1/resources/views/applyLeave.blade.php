@@ -55,6 +55,8 @@ function checkAndCalculate() {
             //compare remaining days with day difference
             document.getElementById("endDate").value = "";
             alert("Your remaining leave entitlement for the leave type is not enough! \nPlease apply for unpaid leaves for the exceeded days!");
+         } else {
+            document.getElementById("numOfDays").value = dayDifference;
          }
       }
    }
@@ -113,7 +115,6 @@ function changeEmployeeLeave() {
             </tr>
          @endif
          @endforeach
-
       </table>
 
       @foreach($employees as $employee)
@@ -130,6 +131,8 @@ function changeEmployeeLeave() {
          <label for="endDate" class="label">End date</label>
          <input type="date" name="endDate" id="endDate" required onchange="checkAndCalculate()">
       </p>
+
+      <input type="hidden" id="numOfDays" name="numOfDays" value="">
 
       <p>
          <label for="reason" class="label">Reason</label>

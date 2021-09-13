@@ -19,6 +19,7 @@ class CreateLeaveApplicationsTable extends Migration
             $table->string('leave_type_id');
             $table->date('start_date');
             $table->date('end_date');
+            $table->unsignedInteger('num_of_days');
             $table->string('reason');
             $table->string('document');
             $table->string('status');
