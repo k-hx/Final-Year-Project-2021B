@@ -9,7 +9,13 @@
     </div>
 @endif
 
-<a href="#" class="btn btn-primary">Refresh</a>
+@if(Session::has('info'))
+    <div class="alert alert-primary" role="alert">
+        {{ Session::get('info')}}
+    </div>
+@endif
+
+<a href="{{ route('createLeaveRecord') }}" class="btn btn-primary">Refresh</a>
 
 <div>
    <table>

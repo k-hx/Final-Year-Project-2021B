@@ -30,7 +30,7 @@ class LeaveApplicationController extends Controller
       ->orderBy('leave_types.name','asc')
       ->get();
 
-      return view('applyLeave')->with('employees',$employees)
+      return view('employee/applyLeave')->with('employees',$employees)
                               ->with('employeeLeaves',$employeeLeaves);
    }
 
@@ -72,7 +72,7 @@ class LeaveApplicationController extends Controller
                         ->orderBy('id','asc')
                         ->get();
 
-      return view('leaveApplicationList')->with('employees',$employees)
+      return view('employee/leaveApplicationList')->with('employees',$employees)
                               ->with('leaveApplications',$leaveApplications);
    }
 
@@ -84,7 +84,7 @@ class LeaveApplicationController extends Controller
                         ->select('leave_types.name as leaveTypeName','employees.id as employeeId','employees.full_name as employeeName','leave_applications.*')
                         ->where('leave_applications.leave_approver','=',Auth::id())
                         ->get();
-      return view('leaveApplicationListAdmin')->with('admins',$admins)
+      return view('admin/leaveApplicationList')->with('admins',$admins)
                               ->with('leaveApplications',$leaveApplications);
    }
 

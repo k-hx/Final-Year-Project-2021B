@@ -38,13 +38,13 @@ class LeaveGradeController extends Controller
 
       $employees=Employee::all();
 
-      return view('showLeaveGrades')->with('leaveGrades',$leaveGrades)
+      return view('admin/showLeaveGrades')->with('leaveGrades',$leaveGrades)
       ->with('employees',$employees);
    }
 
    public function edit($id) {
       $leaveGrades=LeaveGrade::all()->where('id',$id);
-      return view('editLeaveGradeName')->with('leaveGrades',$leaveGrades);
+      return view('admin/editLeaveGradeName')->with('leaveGrades',$leaveGrades);
    }
 
    public function update() {
@@ -73,10 +73,11 @@ class LeaveGradeController extends Controller
       $employees=DB::table('employees')
       ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
       ->select('leave_grades.name as leaveGradeName', 'employees.*')
+      ->where('employees.status','=','ACTIVE')
       ->orderBy('id','asc')
       ->get();
 
-      return view('allEmployeesLeaveGrade')->with('employees',$employees);
+      return view('admin/allEmployeesLeaveGrade')->with('employees',$employees);
    }
 
    public function showAnEmployeesLeave($id,$leaveGradeId) {
@@ -93,7 +94,7 @@ class LeaveGradeController extends Controller
       ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
       ->get();
 
-      return view('employeesLeaveGrade')->with('employees',$employees)
+      return view('admin/employeesLeaveGrade')->with('employees',$employees)
       ->with('leaveEntitlements',$leaveEntitlements);
    }
 
@@ -103,7 +104,7 @@ class LeaveGradeController extends Controller
       ->orderBy('name','asc')
       ->get();
 
-      return view('setEmployeesLeaveGrade')->with('employees',$employees)
+      return view('admin/setEmployeesLeaveGrade')->with('employees',$employees)
       ->with('leaveGrades',$leaveGrades);
    }
 

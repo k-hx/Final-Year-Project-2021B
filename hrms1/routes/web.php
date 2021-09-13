@@ -12,7 +12,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // create leave type -----------------------------------------------------------
 Route::get('createLeaveType', function() {
-   return view('createLeaveType');
+   return view('admin/createLeaveType');
 })->name('createLeaveType')->middleware('auth');
 
 Route::post('createLeaveType/store', [App\Http\Controllers\LeaveTypeController::class, 'store'])->name('addLeaveType')->middleware('auth');
@@ -30,7 +30,7 @@ Route::get('leaveType/delete/{id}', [App\Http\Controllers\LeaveTypeController::c
 
 // create leave grade -----------------------------------------------------------
 Route::get('createLeaveGrade', function() {
-   return view('createLeaveGrade');
+   return view('admin/createLeaveGrade');
 })->name('createLeaveGrade');
 
 Route::post('createLeaveGrade/store', [App\Http\Controllers\LeaveGradeController::class, 'store'])->name('addLeaveGrade');
@@ -89,3 +89,6 @@ Route::get('employeesLeave/{id}/{leaveGradeId}',[App\Http\Controllers\LeaveGrade
 Route::get('setEmployeesLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeController::class, 'setEmployeesLeaveGradePage'])->name('setEmployeesLeaveGrade');
 
 Route::post('setEmployeesLeaveGrade/update',[App\Http\Controllers\LeaveGradeController::class, 'updateEmployeesLeaveGrade'])->name('updateEmployeesLeaveGrade');
+
+// create new employees leave record every year (manually) -----------------------------------------------------------
+Route::get('employeesLeave/createLeaveRecord',[App\Http\Controllers\EmployeeLeaveController::class, 'createLeaveRecord'])->name('createLeaveRecord');

@@ -4,10 +4,12 @@
 
 @section('content')
 @if(Session::has('success'))
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success alert-dismissible" role="alert">
         {{ Session::get('success')}}
     </div>
 @endif
+
+<h1>Not yet completed?</h1>
 
 <a href="#" class="btn btn-primary">Refresh</a>
 

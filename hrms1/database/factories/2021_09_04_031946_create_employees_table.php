@@ -24,6 +24,7 @@ class CreateEmployeesTable extends Migration
             $table->string('supervisor');
             $table->string('leave_grade');
             $table->string('pay_grade');
+            $table->string('status');
             $table->timestamps();
         });
     }
