@@ -22,14 +22,6 @@ class CreateLeaveTypesTable extends Migration
         });
     }
 
-    DB::table('leave_types')->insert(
-        array(
-            'name' => 'Unpaid Leave',
-            'status' => 'added';
-            'min_num_of_days' => '0';
-        )
-    );
-
     /**
      * Reverse the migrations.
      *
