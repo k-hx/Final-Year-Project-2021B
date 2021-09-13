@@ -77,7 +77,7 @@ Route::get('admin/approveLeave/{employeeId}/{id}', [App\Http\Controllers\LeaveAp
 Route::get('admin/reject/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'reject'])->name('rejectLeave');
 
 // cancel leave -----------------------------------------------------------
-Route::get('leaveApplication/cancel/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
+Route::get('leaveApplication/cancel/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
 
 // all employees' leave grade -----------------------------------------------------------
 Route::get('employeesLeave/all', [App\Http\Controllers\LeaveGradeController::class, 'showAllEmployeesLeaveGrade'])->name('allEmployeesLeaveGrade');

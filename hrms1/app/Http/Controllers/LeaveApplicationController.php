@@ -139,12 +139,32 @@ class LeaveApplicationController extends Controller
       $leaveApplications->status='Rejected';
       $leaveApplications->save();
 
-      return redirect()->route('showLeaveApplicationListAdmin');      
+      return redirect()->route('showLeaveApplicationListAdmin');
    }
 
-
-   public function cancel($id) {
+   public function cancel($employeeId,$id) {
       $leaveApplications=LeaveApplication::find($id);
+
+      $previousStatus=$leaveApplications->status;
+      if($previousStatus = "Approved") {
+         //update leave taken
+         $employeeLeaves=DB::table('employee_leaves')
+         ->where('employee','=',$employeeId)
+         ->where('leave_type','=',$leaveApplications->leave_type_id)
+         ->where('year','=',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($employeeLeaves as $employeeLeave) {
+            $employeeLeaveId=$employeeLeave->id;
+            $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+            $currentLeavesTaken=$employeeLeave->leaves_taken;
+            $employeeLeave->leaves_taken=$currentLeavesTaken-($leaveApplications->num_of_days);
+            $employeeLeave->remaining_days=($employeeLeave->remaining_days)+($leaveApplications->num_of_days);
+            $employeeLeave->save();
+         }
+      }
+
       $leaveApplications->status='Cancelled';
       $leaveApplications->save();
 

@@ -44,7 +44,7 @@
             @endphp
 
             @if (($today < $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
-            <a href="{{ route('cancelLeave', ['id' => $leaveApplication->id])}}" class="btn btn-danger" onclick="return confirm('Cancel this leave application?')">Cancel</a>
+            <a href="{{ route('cancelLeave', ['employeeId' => $leaveApplication->employee, 'id' => $leaveApplication->id])}}" class="btn btn-danger" onclick="return confirm('Cancel this leave application?')">Cancel</a>
             @else
             -
             @endif
