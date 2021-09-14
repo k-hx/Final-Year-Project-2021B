@@ -71,6 +71,24 @@ class EmployeeLeaveController extends Controller
        // return view('debuggingView')->with('isSuccess',$isSuccess);
   }
 
+  public function showAnEmployeesLeave($id) {
+     $employees=DB::table('employees')
+     ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
+     ->select('leave_grades.name as leaveGradeName', 'employees.*')
+     ->where('employees.id','=',$id)
+     ->get();
+
+     $employeeLeaves=DB::table('employee_leaves')
+     ->leftjoin('leave_types','leave_types.id','=','employee_leaves.leave_type')
+     ->select('leave_types.name as leaveTypeName','employee_leaves.*')
+     ->orderBy('leave_types.id','asc')
+     ->where('employee_leaves.employee',$id)
+     ->get();
+
+     return view('admin/employeesLeaveGrade')->with('employees',$employees)
+     ->with('employeeLeaves',$employeeLeaves);
+  }
+
 
   public function showEmployeeOwnLeave() {
      $employees=DB::table('employees')

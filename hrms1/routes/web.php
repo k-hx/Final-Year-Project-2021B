@@ -89,7 +89,7 @@ Route::get('leaveApplication/cancel/{employeeId}/{id}', [App\Http\Controllers\Le
 Route::get('employeesLeave/all', [App\Http\Controllers\LeaveGradeController::class, 'showAllEmployeesLeaveGrade'])->name('allEmployeesLeaveGrade');
 
 // an employee's leave grade -----------------------------------------------------------
-Route::get('employeesLeave/{id}/{leaveGradeId}',[App\Http\Controllers\LeaveGradeController::class, 'showAnEmployeesLeave'])->name('employeesLeaveGrade');
+Route::get('employeesLeave/{id}',[App\Http\Controllers\EmployeeLeaveController::class, 'showAnEmployeesLeave'])->name('employeesLeaveGrade');
 
 // view own leave grade (employee) -----------------------------------------------------------
 Route::get('employeesLeave',[App\Http\Controllers\EmployeeLeaveController::class, 'showEmployeeOwnLeave'])->name('employeeOwnLeaveGrade');

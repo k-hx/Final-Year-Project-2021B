@@ -36,13 +36,21 @@
          <th>Leave Type ID</th>
          <th>Leave Type Name</th>
          <th>Number of Days Entitled</th>
+         <th>Leaves Taken</th>
+         <th>Remaining Days</th>
+         <th>Year</th>
+         <th>Status</th>
       </tr>
 
-      @foreach($leaveEntitlements as $leaveEntitlement)
+      @foreach($employeeLeaves as $employeeLeave)
       <tr>
-         <td>{{ $leaveEntitlement->leaveTypeId }}</td>
-         <td>{{ $leaveEntitlement->leaveTypeName }}</td>
-         <td>{{ $leaveEntitlement->num_of_days }}</td>
+         <td>{{ $employeeLeave->leave_type }}</td>
+         <td>{{ $employeeLeave->leaveTypeName }}</td>
+         <td>{{ $employeeLeave->total_days }}</td>
+         <td>{{ $employeeLeave->leaves_taken }}</td>
+         <td>{{ $employeeLeave->remaining_days }}</td>
+         <td>{{ $employeeLeave->year }}</td>
+         <td>{{ $employeeLeave->status }}</td>
       </tr>
       @endforeach
       <tr>

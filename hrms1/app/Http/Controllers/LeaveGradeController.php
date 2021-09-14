@@ -11,6 +11,7 @@ use App\Models\LeaveGradeHistory;
 use App\Models\LeaveEntitlement;
 use Session;
 use Carbon\Carbon;
+use Auth;
 
 class LeaveGradeController extends Controller
 {
@@ -74,28 +75,11 @@ class LeaveGradeController extends Controller
       ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
       ->select('leave_grades.name as leaveGradeName', 'employees.*')
       ->where('employees.status','=','ACTIVE')
+      ->where('employees.supervisor','=',Auth::id())
       ->orderBy('id','asc')
       ->get();
 
       return view('admin/allEmployeesLeaveGrade')->with('employees',$employees);
-   }
-
-   public function showAnEmployeesLeave($id,$leaveGradeId) {
-      $employees=DB::table('employees')
-      ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
-      ->select('leave_grades.name as leaveGradeName', 'employees.*')
-      ->where('employees.id','=',$id)
-      ->get();
-
-      $leaveEntitlements=DB::table('leave_entitlements')
-      ->leftjoin('leave_types','leave_entitlements.leaveType','=','leave_types.id')
-      ->select('leave_types.id as leaveTypeId','leave_types.name as leaveTypeName','leave_entitlements.*')
-      ->orderBy('leave_types.id','asc')
-      ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
-      ->get();
-
-      return view('admin/employeesLeaveGrade')->with('employees',$employees)
-      ->with('leaveEntitlements',$leaveEntitlements);
    }
 
    public function setEmployeesLeaveGradePage($id) {

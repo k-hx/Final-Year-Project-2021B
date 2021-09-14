@@ -33,8 +33,6 @@
     </div>
 @endif
 
-<a href="" class="btn btn-primary disabled">Update status for expired leave applications</a>
-
 <div style="text-align:center">
    <form id="leaveProcessing" action="" method="get">
       @csrf
