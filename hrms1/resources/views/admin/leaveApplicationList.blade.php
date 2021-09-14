@@ -10,11 +10,18 @@
    }
 
    function selectAll() {
-      if(document.getElementById("selectAllCheckbox").checked) {
-         alert("Hello goodbye");
-         var checkboxes = document.getElementsByName("leaveApplication[]");
-         foreach
+      var checkboxes = document.getElementsByName("leaveApplication[]");
 
+      if(document.getElementById("selectAllCheckbox").checked) {
+         //check all checkboxes
+         for(var i=0; i<checkboxes.length; i++) {
+            checkboxes[i].checked = true;
+         }
+      } else {
+         //uncheck all checkboxes
+         for(var i=0; i<checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+         }
       }
    }
 </script>
