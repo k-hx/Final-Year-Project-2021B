@@ -68,7 +68,7 @@ class AdminLeaveApplicationController extends Controller
       return redirect()->route('showAdminOwnLeaveApplicationList');
    }
 
-   public function showLeaveApplicationList() {
+   public function showOwnLeaveApplicationList() {
       $admins=Admin::all()->where('id',Auth::id());
       $leaveApplications=DB::table('leave_applications')
       ->get();
@@ -91,7 +91,8 @@ class AdminLeaveApplicationController extends Controller
       ->orderBy('id','asc')
       ->get();
 
-      return view('admin/leaveApplicationList')->with('admins',$admins)
+      return view('admin/ownLeaveApplicationList')
+      ->with('admins',$admins)
       ->with('leaveApplications',$leaveApplications);
    }
 
