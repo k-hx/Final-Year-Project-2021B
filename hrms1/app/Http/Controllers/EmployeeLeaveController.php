@@ -8,6 +8,7 @@ use DB;
 use App\Models\EmployeeLeave;
 use App\Models\Employee;
 use Carbon\Carbon;
+Use Auth;
 
 class EmployeeLeaveController extends Controller
 {
@@ -75,14 +76,17 @@ class EmployeeLeaveController extends Controller
      $employees=DB::table('employees')
      ->leftjoin('leave_grades','leave_grades.id','=','employees.leave_grade')
      ->select('leave_grades.name as leaveGradeName', 'employees.*')
-     ->where('employees.id','=',Auth::id())
+     ->where('employees.id',Auth::id())
      ->get();
 
      $employeeLeaves=DB::table('employee_leaves')
-     ->where('employee','=',Auth::id())
+     ->leftjoin('leave_types','leave_types.id','=','employee_leaves.leave_type')
+     ->select('leave_types.name as leaveTypeName','employee_leaves.*')
+     ->where('employee_leaves.employee',Auth::id())
+     ->orderBy('leave_type','asc')
      ->get();
 
-     return view('ownLeaveGrade')
+     return view('employee/ownLeaveGrade')
      ->with('employees',$employees)
      ->with('employeeLeaves',$employeeLeaves);
   }
