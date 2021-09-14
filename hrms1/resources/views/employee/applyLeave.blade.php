@@ -12,13 +12,23 @@ function checkAndCalculate() {
    var result = selectedLeaveType.options[selectedLeaveType.selectedIndex].value;
 
    //get remaining days for the leave type
-   var employeeLeaveRemainingDays;
+   var employeeLeaveRemainingDays = 0;
    @foreach($employeeLeaves as $employeeLeave)
    var leaveType = "{{ $employeeLeave->leave_type }}";
-   if(result===leaveType) {
+   if(result === leaveType) {
       employeeLeaveRemainingDays = {{ $employeeLeave->remaining_days }};
    }
    @endforeach
+
+   var pendingLeaveApplicationDays = 0;
+   @foreach($leaveApplications as $leaveApplication)
+   var applicationLeaveType = {{ $leaveApplication->leave_type_id }};
+   if(result == applicationLeaveType) {
+         pendingLeaveApplicationDays = pendingLeaveApplicationDays + {{ $leaveApplication->num_of_days }};
+   }
+   @endforeach
+
+   var remainingAfterPending = employeeLeaveRemainingDays - pendingLeaveApplicationDays;
 
    if(employeeLeaveRemainingDays === 0) {
       document.getElementById("startDate").value = "";
@@ -55,6 +65,10 @@ function checkAndCalculate() {
             //compare remaining days with day difference
             document.getElementById("endDate").value = "";
             alert("Your remaining leave entitlement for the leave type is not enough! \nPlease apply for unpaid leaves for the exceeded days!");
+         } else if(dayDifference > remainingAfterPending) {
+            //compare remaining days + total days of pending leave application for the leave type with day difference
+            document.getElementById("endDate").value = "";
+            alert("The total days of your pending leave application and current leave application exceed the remaining days for the leave type!")
          } else {
             document.getElementById("numOfDays").value = dayDifference;
          }
@@ -66,22 +80,17 @@ function changeEmployeeLeave() {
    var selectedLeaveType = document.getElementById("leaveType");
    var result = selectedLeaveType.options[selectedLeaveType.selectedIndex].value;
 
+   document.getElementById("leaveInformation").hidden = false;
 
-   if(result==0) {
-      document.getElementById("leaveInformation").hidden = true;
-   } else {
-      document.getElementById("leaveInformation").hidden = false;
-
-      @foreach($employeeLeaves as $employeeLeave)
-      if("{{ $employeeLeave->leave_type }}" === result) {
-         document.getElementById("employeeLeaveLeaveType").innerHTML="{{ $employeeLeave->leave_type }}";
-         document.getElementById("employeeLeaveLeaveTypeName").innerHTML="{{ $employeeLeave->leaveTypeName }}";
-         document.getElementById("employeeLeaveTotalDays").innerHTML="{{ $employeeLeave->total_days }}";
-         document.getElementById("employeeLeaveLeavesTaken").innerHTML="{{ $employeeLeave->leaves_taken }}";
-         document.getElementById("employeeLeaveRemainingDays").innerHTML="{{ $employeeLeave->remaining_days }}";
-      }
-      @endforeach
+   @foreach($employeeLeaves as $employeeLeave)
+   if("{{ $employeeLeave->leave_type }}" === result) {
+      document.getElementById("employeeLeaveLeaveType").innerHTML="{{ $employeeLeave->leave_type }}";
+      document.getElementById("employeeLeaveLeaveTypeName").innerHTML="{{ $employeeLeave->leaveTypeName }}";
+      document.getElementById("employeeLeaveTotalDays").innerHTML="{{ $employeeLeave->total_days }}";
+      document.getElementById("employeeLeaveLeavesTaken").innerHTML="{{ $employeeLeave->leaves_taken }}";
+      document.getElementById("employeeLeaveRemainingDays").innerHTML="{{ $employeeLeave->remaining_days }}";
    }
+   @endforeach
 }
 
 </script>
@@ -96,7 +105,7 @@ function changeEmployeeLeave() {
          <select class="form-control" name="leaveTypeId" id="leaveType" onchange="changeEmployeeLeave();checkAndCalculate()" required>
             @foreach($employeeLeaves as $employeeLeave)
             <option value="{{ $employeeLeave->leave_type }}">{{ $employeeLeave->leaveTypeName}}</option>
-            @endforeach            
+            @endforeach
          </select>
       </p>
 

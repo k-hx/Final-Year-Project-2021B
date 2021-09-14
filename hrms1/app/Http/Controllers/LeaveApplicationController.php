@@ -37,7 +37,8 @@ class LeaveApplicationController extends Controller
       ->get();
 
       return view('employee/applyLeave')->with('employees',$employees)
-      ->with('employeeLeaves',$employeeLeaves);
+      ->with('employeeLeaves',$employeeLeaves)
+      ->with('leaveApplications',$leaveApplications);
    }
 
    public function submitApplication() {
