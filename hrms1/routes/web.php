@@ -91,6 +91,9 @@ Route::get('employeesLeave/all', [App\Http\Controllers\LeaveGradeController::cla
 // an employee's leave grade -----------------------------------------------------------
 Route::get('employeesLeave/{id}/{leaveGradeId}',[App\Http\Controllers\LeaveGradeController::class, 'showAnEmployeesLeave'])->name('employeesLeaveGrade');
 
+// view own leave grade (employee) -----------------------------------------------------------
+Route::get('employeesLeave',[App\Http\Controllers\EmployeeLeaveController::class, 'showEmployeeOwnLeave'])->name('employeeOwnLeaveGrade');
+
 // assign leave grade -----------------------------------------------------------
 Route::get('setEmployeesLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeController::class, 'setEmployeesLeaveGradePage'])->name('setEmployeesLeaveGrade');
 
