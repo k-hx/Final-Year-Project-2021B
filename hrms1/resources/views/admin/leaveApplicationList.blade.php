@@ -8,6 +8,15 @@
    function reject() {
       document.getElementById("leaveProcessing").action = "{{ route('rejectMultipleLeave') }}";
    }
+
+   function selectAll() {
+      if(document.getElementById("selectAllCheckbox").checked) {
+         alert("Hello goodbye");
+         var checkboxes = document.getElementsByName("leaveApplication[]");
+         foreach
+
+      }
+   }
 </script>
 
 @section('content')
@@ -27,7 +36,9 @@
       <input type="submit" name="submitButton" value="Reject" class="btn btn-warning" onclick="reject()">
       <table>
          <tr>
-            <th>&nbsp;</th>
+            <th>
+               <input type="checkbox" id="selectAllCheckbox" value="" onchange="selectAll()">
+            </th>
             <th>Leave Application ID</th>
             <th>Leave Type</th>
             <th>Employee</th>
@@ -40,9 +51,16 @@
          </tr>
 
          @foreach($leaveApplications as $leaveApplication)
+         @php
+            $today=date("Y-m-d");
+            $leaveDate=$leaveApplication->start_date;
+         @endphp
+
          <tr>
             <td>
+               @if (($today < $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
                <input type="checkbox" name="leaveApplication[]" value="{{ $leaveApplication->id }}">
+               @endif
             </td>
             <td>{{ $leaveApplication->id }}</td>
             <td>{{ $leaveApplication->leaveTypeName }}</td>
@@ -59,11 +77,6 @@
                @endif
             </td>
             <td>
-               @php
-                  $today=date("Y-m-d");
-                  $leaveDate=$leaveApplication->start_date;
-               @endphp
-
                @if (($today < $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
                   @if ($leaveApplication->status !== 'Approved')
                   <a href="{{ route('approveLeave', ['employeeId' => $leaveApplication->employee, 'id' => $leaveApplication->id]) }}" class="btn btn-success" >Approve</a>

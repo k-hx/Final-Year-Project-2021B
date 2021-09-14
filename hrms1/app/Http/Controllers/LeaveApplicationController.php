@@ -91,6 +91,7 @@ class LeaveApplicationController extends Controller
       ->select('leave_types.name as leaveTypeName','employees.id as employeeId','employees.full_name as employeeName','leave_applications.*')
       ->where('leave_applications.leave_approver','=',Auth::id())
       ->get();
+
       return view('admin/leaveApplicationList')->with('admins',$admins)
       ->with('leaveApplications',$leaveApplications);
    }
@@ -117,6 +118,7 @@ class LeaveApplicationController extends Controller
          $employeeLeave->save();
       }
 
+      Session::flash('success',"Leave application approved successfully!");
       return redirect()->route('showLeaveApplicationListAdmin');
    }
 
@@ -146,6 +148,8 @@ class LeaveApplicationController extends Controller
             $employeeLeave->save();
          }
       }
+
+      Session::flash('success',"Leave applications approved successfully!");
       return redirect()->route('showLeaveApplicationListAdmin');
    }
 
@@ -175,6 +179,7 @@ class LeaveApplicationController extends Controller
       $leaveApplications->status='Rejected';
       $leaveApplications->save();
 
+      Session::flash('success',"Leave application rejected successfully!");
       return redirect()->route('showLeaveApplicationListAdmin');
    }
 
@@ -208,6 +213,7 @@ class LeaveApplicationController extends Controller
          }
       }
 
+      Session::flash('success',"Leave application rejected successfully!");
       return redirect()->route('showLeaveApplicationListAdmin');
    }
 
