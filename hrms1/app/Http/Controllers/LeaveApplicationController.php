@@ -72,6 +72,19 @@ class LeaveApplicationController extends Controller
    public function showLeaveApplicationList() {
       $employees=Employee::all()->where('id',Auth::id());
       $leaveApplications=DB::table('leave_applications')
+      ->get();
+
+      foreach($leaveApplications as $leaveApplication) {
+         $leaveApplication=LeaveApplication::find($leaveApplication->id);
+         $today=Carbon::now();
+         $leaveApplicationDate=$leaveApplication->start_date;
+         if($today->gt($leaveApplicationDate) && ($leaveApplication->status === 'Applied')) {
+            $leaveApplication->status='Expired';
+            $leaveApplication->save();
+         }
+      }
+
+      $leaveApplications=DB::table('leave_applications')
       ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
       ->leftjoin('admins','admins.id','=','leave_applications.leave_approver')
       ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
@@ -85,6 +98,19 @@ class LeaveApplicationController extends Controller
 
    public function showLeaveApplicationListAdmin() {
       $admins=Admin::all()->where('id',Auth::id());
+      $leaveApplications=DB::table('leave_applications')
+      ->get();
+
+      foreach($leaveApplications as $leaveApplication) {
+         $leaveApplication=LeaveApplication::find($leaveApplication->id);
+         $today=Carbon::now();
+         $leaveApplicationDate=$leaveApplication->start_date;
+         if($today->gt($leaveApplicationDate)) {
+            $leaveApplication->status='Expired';
+            $leaveApplication->save();
+         }
+      }
+
       $leaveApplications=DB::table('leave_applications')
       ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
       ->leftjoin('employees','employees.id','=','leave_applications.employee')
