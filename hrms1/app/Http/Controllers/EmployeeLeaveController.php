@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Session;
 use DB;
+Use Auth;
+use Carbon\Carbon;
 use App\Models\EmployeeLeave;
 use App\Models\Employee;
-use Carbon\Carbon;
-Use Auth;
 
 class EmployeeLeaveController extends Controller
 {
@@ -64,11 +64,10 @@ class EmployeeLeaveController extends Controller
        if($isSuccess === 1) {
           Session::flash('success',"Employee leave record for current year is created successfully!");
        } else if($isSuccess = 2) {
-          Session::flash('info',"Employee leave record for current year is already existed!");
+          Session::flash('primary',"Employee leave record for current year is already existed!");
        }
 
        return redirect()->route('allEmployeesLeaveGrade');
-       // return view('debuggingView')->with('isSuccess',$isSuccess);
   }
 
   public function showAnEmployeesLeave($id) {
@@ -78,15 +77,25 @@ class EmployeeLeaveController extends Controller
      ->where('employees.id','=',$id)
      ->get();
 
-     $employeeLeaves=DB::table('employee_leaves')
-     ->leftjoin('leave_types','leave_types.id','=','employee_leaves.leave_type')
-     ->select('leave_types.name as leaveTypeName','employee_leaves.*')
-     ->orderBy('leave_types.id','asc')
-     ->where('employee_leaves.employee',$id)
-     ->get();
+     foreach($employees as $employee) {
+        $employee=Employee::find($employee->id);
+        $supervisor=$employee->supervisor;
+     }
 
-     return view('admin/employeesLeaveGrade')->with('employees',$employees)
-     ->with('employeeLeaves',$employeeLeaves);
+     if($supervisor == Auth::id()) {
+        $employeeLeaves=DB::table('employee_leaves')
+       ->leftjoin('leave_types','leave_types.id','=','employee_leaves.leave_type')
+       ->select('leave_types.name as leaveTypeName','employee_leaves.*')
+       ->orderBy('leave_types.id','asc')
+       ->where('employee_leaves.employee',$id)
+       ->get();
+
+       return view('admin/employeesLeaveGrade')->with('employees',$employees)
+       ->with('employeeLeaves',$employeeLeaves);
+    } else {
+      Session::flash('danger',"The employee is not under your supervision.");
+      return redirect()->route('allEmployeesLeaveGrade');
+   }
   }
 
 

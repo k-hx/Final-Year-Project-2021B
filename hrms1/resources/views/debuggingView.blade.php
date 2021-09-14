@@ -2,6 +2,6 @@
 @section('content')
 
 <div>
-<p>{{ $isSuccess }}</p>
+<p>Hello goodbye</p>
 </div>
 @endsection

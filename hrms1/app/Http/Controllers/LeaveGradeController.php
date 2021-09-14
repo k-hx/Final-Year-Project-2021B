@@ -8,6 +8,9 @@ use App\Models\LeaveGrade;
 use App\Models\Employee;
 use App\Models\EmployeeLeave;
 use App\Models\LeaveGradeHistory;
+use App\Models\Admin;
+use App\Models\AdminLeave;
+use App\Models\AdminLeaveGradeHistory;
 use App\Models\LeaveEntitlement;
 use Session;
 use Carbon\Carbon;
@@ -242,6 +245,182 @@ class LeaveGradeController extends Controller
 
       Session::flash('success',"Leave grade assigned successfully!");
       return redirect()->route('allEmployeesLeaveGrade');
+   }
+
+   public function showAllAdminsLeaveGrade() {
+      $admins=DB::table('admins')
+      ->leftjoin('leave_grades','leave_grades.id','=','admins.leave_grade')
+      ->select('leave_grades.name as leaveGradeName', 'admins.*')
+      ->where('admins.status','=','ACTIVE')
+      ->where('admins.supervisor','=',Auth::id())
+      ->orderBy('id','asc')
+      ->get();
+
+      return view('admin/allAdminsLeaveGrade')->with('admins',$admins);
+   }
+
+   public function setAdminsLeaveGradePage($id) {
+      $admins=Admin::all()->where('id',$id);
+      $leaveGrades=DB::table('leave_grades')
+      ->orderBy('name','asc')
+      ->get();
+
+      return view('admin/setAdminsLeaveGrade')
+      ->with('admins',$admins)
+      ->with('leaveGrades',$leaveGrades);
+   }
+
+   //update administrator's leave grade in database
+   public function updateAdminsLeaveGrade() {
+      $r=request();
+
+      $id=$r->admin;
+      //update leave grade in administrator table
+      $admins=Admin::find($id);
+      $admins->leave_grade=$r->leave_grade;
+      $admins->save();
+
+      //if the administrator was assigned with another leave grade before,
+      //update the previous leave grade history "effective_until"
+      if($r->originalLeaveGrade !== 'Unassigned') {
+         $lastLeaveGradeHistories=DB::table('leave_grade_histories')
+         ->where('admin','=',$id)
+         ->whereNull('effective_until')
+         ->get();
+
+         foreach($lastLeaveGradeHistories as $lastLeaveGradeHistory) {
+            $id=$lastLeaveGradeHistory->id;
+            $lastLeaveGradeHistory=AdminLeaveGradeHistory::find($id);
+            $lastLeaveGradeHistory->effective_until=Carbon::now();
+            $lastLeaveGradeHistory->save();
+         }
+      }
+
+      //create a new leave grade history record
+      $createLeaveGradeHistory=AdminLeaveGradeHistory::create([
+         'admin'=>$r->admin,
+         'leave_grade'=>$r->leave_grade,
+         'effective_from'=>Carbon::now(),
+      ]);
+
+      //if the administrator's previous leave grade is unassigned,
+      //create new adminLeave record for each leave entitlement
+      if($r->originalLeaveGrade == 'Unassigned') {
+         $leaveEntitlements=DB::table('leave_entitlements')
+         ->where('leave_entitlements.leaveGrade','=',$r->leave_grade)
+         ->get();
+
+         foreach ($leaveEntitlements as $leaveEntitlement) {
+            $createAdminLeave=AdminLeave::create([
+               'admin'=>$r->admin,
+               'leave_type'=>$leaveEntitlement->leaveType,
+               'total_days'=>$leaveEntitlement->num_of_days,
+               'leaves_taken'=>0,
+               'remaining_days'=>$leaveEntitlement->num_of_days,
+               'year'=>Carbon::now()->format('Y'),
+               'status'=>'Valid',
+            ]);
+         }
+      } else {
+         //if admin was assigned with another leave grade before,
+         //needs to update the previous records,
+         //and add new record if the leave type is not provided before
+
+         $leaveGradeId=$r->leave_grade;
+
+         //retrieve leave entitlement for the new leave grade
+         $leaveEntitlements=DB::table('leave_entitlements')
+         ->where('leave_entitlements.leaveGrade','=',$leaveGradeId)
+         ->get();
+
+         //retrieve admin's leave record for present year
+         $adminLeaves=DB::table('admin_leaves')
+         ->where('admin','=',$r->admin)
+         ->where('year','=',Carbon::now()->format('Y'))
+         ->get();
+
+         //set isMatched leave entitlement with admin's leave record to 0(false)
+         $isMatched=0;
+
+         //for each leave entitlement for the leave grade ...
+         foreach($leaveEntitlements as $leaveEntitlement) {
+            //set the value of $isMatched to 0(false) for every loop
+            $isMatched=0;
+
+            //find each leave entitlement with its id
+            $leaveEntitlementId=$leaveEntitlement->id;
+            $leaveEntitlement=LeaveEntitlement::find($leaveEntitlementId);
+
+            //need to see if the leave entitlement for the leave grade
+            //so we need to loop evert adminLeave records
+            foreach($adminLeaves as $adminLeave) {
+               //find each adminLeave record with its id
+               $adminLeaveId=$adminLeave->id;
+               $adminLeave=AdminLeave::find($adminLeaveId);
+
+               //if the adminLeave leave type matched with the leave entitlement leave type
+               if($adminLeave->leave_type == $leaveEntitlement->leaveType) {
+                  //set isMatched to 1(true)
+                  $isMatched=1;
+
+                  //update the data of the admin leave
+                  $adminLeave->total_days=$leaveEntitlement->num_of_days;
+                  $remaining_days=($leaveEntitlement->num_of_days)-($adminLeave->leaves_taken);
+                  if($leaveEntitlement->num_of_days-$adminLeave->leaves_taken <0) {
+                     $remaining_days=0;
+                  }
+                  $adminLeave->remaining_days=$remaining_days;
+                  $adminLeave->status='Valid';
+                  $adminLeave->save();
+               }
+            }
+
+            //if match is not found after looping all admin,
+            //we need to create a new admin leave record
+            if($isMatched==0) {
+               $createAdminLeave=AdminLeave::create([
+                  'admin'=>$r->admin,
+                  'leave_type'=>$leaveEntitlement->leaveType,
+                  'total_days'=>$leaveEntitlement->num_of_days,
+                  'leaves_taken'=>0,
+                  'remaining_days'=>$leaveEntitlement->num_of_days,
+                  'year'=>Carbon::now()->format('Y'),
+                  'status'=>'Valid',
+               ]);
+            }
+         }
+
+         foreach($adminLeaves as $adminLeave) {
+            //set isMatched leave entitlement with admin's leave record to 0(false)
+            $isMatched=0;
+
+            //find each adminLeave record with its id
+            $adminLeaveId=$adminLeave->id;
+            $adminLeave=AdminLeave::find($adminLeaveId);
+
+            foreach($leaveEntitlements as $leaveEntitlement) {
+               //find each leave entitlement with its id
+               $leaveEntitlementId=$leaveEntitlement->id;
+               $leaveEntitlement=LeaveEntitlement::find($leaveEntitlementId);
+
+               if($adminLeave->leave_type == $leaveEntitlement->leaveType) {
+                  $isMatched=1;
+               }
+            }
+
+            if($isMatched==0) {
+               //because it loops for every admin leave record,
+               //if the admin leave record does not match with any leave entitlement,
+               //it means the leave type is not included in the new leave grade,
+               //so it needs to be set to invalid
+               $adminLeave->status='Invalid';
+               $adminLeave->save();
+            }
+         }
+      }
+
+      Session::flash('success',"Leave grade assigned successfully!");
+      return redirect()->route('allAdminsLeaveGrade');
    }
 
 

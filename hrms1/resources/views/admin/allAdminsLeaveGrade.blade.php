@@ -27,18 +27,18 @@
    <table>
       <tr>
          <th>ID</th>
-         <th>Employee Name</th>
+         <th>Admin Name</th>
          <th>Leave Grade</th>
          <th>Action</th>
       </tr>
 
-      @foreach($employees as $employee)
+      @foreach($admins as $admin)
       <tr>
-         <td>{{ $employee->id }}</td>
-         <td>{{ $employee->full_name }}</td>
-         <td>{{ $employee->leave_grade }} {{ $employee->leaveGradeName }}</td>
+         <td>{{ $admin->id }}</td>
+         <td>{{ $admin->full_name }}</td>
+         <td>{{ $admin->leave_grade }} {{ $admin->leaveGradeName }}</td>
          <td>
-            <a href="{{ route('employeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">View/Edit Leave Information</a>
+            <a href="{{ route('adminsLeaveGrade', ['id' => $admin->id]) }}" class="btn btn-primary">View/Edit Leave Information</a>
          </td>
       </tr>
       @endforeach
