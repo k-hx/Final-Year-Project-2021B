@@ -18,6 +18,9 @@ class AdminLeaveApplicationController extends Controller
       $this->middleware('auth');
    }
 
+
+   //++++++++++++++++++++++++++ SHOW APPLY LEAVE PAGE ++++++++++++++++++++++++++
+
    public function showApplyLeavePage() {
       $admins=Admin::all()->where('id',Auth::id());
 
@@ -39,6 +42,9 @@ class AdminLeaveApplicationController extends Controller
       ->with('adminLeaves',$adminLeaves)
       ->with('adminLeaveApplications',$adminLeaveApplications);
    }
+
+
+   //++++++++++++++++++++++++++ SUBMIT LEAVE APPLICATION ++++++++++++++++++++++++++
 
    public function submitApplication() {
       $r=request();
@@ -68,6 +74,9 @@ class AdminLeaveApplicationController extends Controller
       return redirect()->route('showAdminOwnLeaveApplicationList');
    }
 
+
+   //++++++++++++++++++++++++++ SHOW ADMINISTRATOR OWN LEAVE APPLICATION LIST ++++++++++++++++++++++++++
+
    public function showOwnLeaveApplicationList() {
       $admins=Admin::all()->where('id',Auth::id());
       $adminLeaveApplications=DB::table('admin_leave_applications')
@@ -96,6 +105,9 @@ class AdminLeaveApplicationController extends Controller
       ->with('adminLeaveApplications',$adminLeaveApplications);
    }
 
+
+   //++++++++++++++++++++++++++ SHOW ADMINISTRATOR LEAVE APPLICATION LIST ++++++++++++++++++++++++++
+
    public function showAdminLeaveApplicationList() {
       $admins=Admin::all()->where('id',Auth::id());
       $adminLeaveApplications=DB::table('admin_leave_applications')
@@ -113,7 +125,7 @@ class AdminLeaveApplicationController extends Controller
 
       $adminLeaveApplications=DB::table('admin_leave_applications')
       ->leftjoin('leave_types','leave_types.id','=','admin_leave_applications.leave_type_id')
-      ->leftjoin('admins','admins.id','=','leave_applications.admin')
+      ->leftjoin('admins','admins.id','=','admin_leave_applications.admin')
       ->select('leave_types.name as leaveTypeName','admins.id as adminId','admins.full_name as adminName','admin_leave_applications.*')
       ->where('admin_leave_applications.leave_approver','=',Auth::id())
       ->get();
@@ -123,12 +135,15 @@ class AdminLeaveApplicationController extends Controller
       ->with('adminLeaveApplications',$adminLeaveApplications);
    }
 
+
+   //+++++++++++++++++++ APPROVE ADMINISTRATOR LEAVE APPLICATION +++++++++++++++++++
+
    public function approve($adminId,$id) {
       $adminLeaveApplications=AdminLeaveApplication::find($id);
       $adminLeaveApplications->status='Approved';
       $adminLeaveApplications->save();
 
-      //update leave taken for the employee ------------------------------------
+      //update leave taken for the administrator ------------------------------------
       $adminLeaves=DB::table('admin_leaves')
       ->where('admin','=',$adminId)
       ->where('leave_type','=',$adminLeaveApplications->leave_type_id)
@@ -149,6 +164,142 @@ class AdminLeaveApplicationController extends Controller
       return redirect()->route('showAdminLeaveApplicationList');
    }
 
-   
+
+   //+++++++++++++++++++ APPROVE MULTIPLE LEAVE APPLICATION +++++++++++++++++++
+
+   public function approveMultiple() {
+      $r=request();
+
+      $adminLeaveApplications=$r->input('adminLeaveApplication');
+      foreach($adminLeaveApplications as $adminLeaveApplication => $value) {
+         $adminLeaveApplication=AdminLeaveApplication::find($value);
+
+         if($adminLeaveApplication->status != "Approved") {
+            $adminLeaveApplication->status='Approved';
+            $adminLeaveApplication->save();
+
+            $adminId=$adminLeaveApplication->admin;
+            $adminLeaves=DB::table('admin_leaves')
+            ->where('admin','=',$adminId)
+            ->where('leave_type','=',$adminLeaveApplication->leave_type_id)
+            ->where('year','=',Carbon::now()->format('Y'))
+            ->get();
+
+            foreach($adminLeaves as $adminLeave) {
+               $adminLeaveId=$adminLeave->id;
+               $adminLeave=AdminLeave::find($adminLeaveId);
+
+               $currentLeavesTaken=$adminLeave->leaves_taken;
+               $adminLeave->leaves_taken=$currentLeavesTaken+($adminLeaveApplication->num_of_days);
+               $adminLeave->remaining_days=($adminLeave->remaining_days)-($adminLeaveApplication->num_of_days);
+               $adminLeave->save();
+            }
+         }
+      }
+
+      Session::flash('success',"Leave applications approved successfully!");
+      return redirect()->route('showAdminLeaveApplicationList');
+   }
+
+
+   //+++++++++++++++ REJECT ADMINISTRATOR'S LEAVE APPLICATION +++++++++++++++++
+
+   public function reject($adminId,$id) {
+      $adminLeaveApplications=AdminLeaveApplication::find($id);
+
+      $previousStatus=$adminLeaveApplications->status;
+      if($previousStatus = "Approved") {
+         //update leave taken
+         $adminLeaves=DB::table('admin_leaves')
+         ->where('admin','=',$adminId)
+         ->where('leave_type','=',$adminLeaveApplications->leave_type_id)
+         ->where('year','=',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($adminLeaves as $adminLeave) {
+            $adminLeaveId=$adminLeave->id;
+            $adminLeave=AdminLeave::find($adminLeaveId);
+
+            $currentLeavesTaken=$adminLeave->leaves_taken;
+            $adminLeave->leaves_taken=$currentLeavesTaken-($adminLeaveApplications->num_of_days);
+            $adminLeave->remaining_days=($adminLeave->remaining_days)+($adminLeaveApplications->num_of_days);
+            $adminLeave->save();
+         }
+      }
+
+      $adminLeaveApplications->status='Rejected';
+      $adminLeaveApplications->save();
+
+      Session::flash('success',"Leave application rejected successfully!");
+      return redirect()->route('showAdminLeaveApplicationList');
+   }
+
+
+   //+++++++++++++++ REJECT MULTIPLE ADMINISTRATOR'S LEAVE APPLICATION +++++++++++++++++
+
+   public function rejectMultiple() {
+      $r=request();
+
+      $adminLeaveApplications=$r->input('adminLeaveApplication');
+      foreach($adminLeaveApplications as $adminLeaveApplication => $value) {
+         $adminLeaveApplication=AdminLeaveApplication::find($value);
+         $previousStatus=$adminLeaveApplication->status;
+         $adminLeaveApplication->status='Rejected';
+         $adminLeaveApplication->save();
+
+         if($previousStatus === "Approved") {
+            $adminId=$adminLeaveApplication->admin;
+            $adminLeaves=DB::table('admin_leaves')
+            ->where('admin','=',$adminId)
+            ->where('leave_type','=',$adminLeaveApplication->leave_type_id)
+            ->where('year','=',Carbon::now()->format('Y'))
+            ->get();
+
+            foreach($adminLeaves as $adminLeave) {
+               $adminLeavesId=$adminLeave->id;
+               $adminLeave=AdminLeave::find($adminLeavesId);
+
+               $currentLeavesTaken=$adminLeave->leaves_taken;
+               $adminLeave->leaves_taken=$currentLeavesTaken-($adminLeaveApplication->num_of_days);
+               $adminLeave->remaining_days=($adminLeave->remaining_days)+($adminLeaveApplication->num_of_days);
+               $adminLeave->save();
+            }
+         }
+      }
+
+      Session::flash('success',"Leave application rejected successfully!");
+      return redirect()->route('showAdminLeaveApplicationList');
+   }
+
+   //+++++++++++++++ ADMINISTRATOR CANCEL OWN LEAVE APPLICATION +++++++++++++++++
+
+   public function cancel($adminId,$id) {
+      $adminLeaveApplications=AdminLeaveApplication::find($id);
+
+      $previousStatus=$adminLeaveApplications->status;
+      if($previousStatus = "Approved") {
+         //update leave taken
+         $adminLeaves=DB::table('admin_leaves')
+         ->where('admin','=',$adminId)
+         ->where('leave_type','=',$adminLeaveApplications->leave_type_id)
+         ->where('year','=',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($adminLeaves as $adminLeave) {
+            $adminLeaveId=$adminLeave->id;
+            $adminLeave=AdminLeave::find($adminLeaveId);
+
+            $currentLeavesTaken=$adminLeave->leaves_taken;
+            $adminLeave->leaves_taken=$currentLeavesTaken-($adminLeaveApplications->num_of_days);
+            $adminLeave->remaining_days=($adminLeave->remaining_days)+($adminLeaveApplications->num_of_days);
+            $adminLeave->save();
+         }
+      }
+
+      $adminLeaveApplications->status='Cancelled';
+      $adminLeaveApplications->save();
+
+      return redirect()->route('showAdminOwnLeaveApplicationList');
+   }
 
 }

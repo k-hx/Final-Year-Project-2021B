@@ -21,10 +21,10 @@ function checkAndCalculate() {
    @endforeach
 
    var pendingLeaveApplicationDays = 0;
-   @foreach($leaveApplications as $leaveApplication)
-   var applicationLeaveType = {{ $leaveApplication->leave_type_id }};
+   @foreach($adminLeaveApplications as $adminLeaveApplication)
+   var applicationLeaveType = {{ $adminLeaveApplication->leave_type_id }};
    if(result == applicationLeaveType) {
-         pendingLeaveApplicationDays = pendingLeaveApplicationDays + {{ $leaveApplication->num_of_days }};
+         pendingLeaveApplicationDays = pendingLeaveApplicationDays + {{ $adminLeaveApplication->num_of_days }};
    }
    @endforeach
 
@@ -97,14 +97,14 @@ function changeAdminLeave() {
 
 <h1>Leave Application</h1>
 <div style="text-align:center">
-   <form method="post" action="{{ route('admin/submitApplication') }}" enctype="multipart/form-data" onsubmit="return validate()">
+   <form method="post" action="{{ route('submitAdminApplication') }}" enctype="multipart/form-data" onsubmit="return validate()">
       @csrf
 
       <p>
          <label for="leaveType" class="label">Leave Type</label>
          <select class="form-control" name="leaveTypeId" id="leaveType" onchange="changeAdminLeave();checkAndCalculate()" required>
             @foreach($adminLeaves as $adminLeave)
-            <option value="{{ $adminLeave->leave_type }}">{{ $adminLeaves->leaveTypeName}}</option>
+            <option value="{{ $adminLeave->leave_type }}">{{ $adminLeave->leaveTypeName}}</option>
             @endforeach
          </select>
       </p>
@@ -134,7 +134,7 @@ function changeAdminLeave() {
       </table>
 
       @foreach($admins as $admin)
-      <input type="hidden" name="admin" value="{{ $adminLeave->id }}">
+      <input type="hidden" name="admin" value="{{ $admin->id }}">
       <input type="hidden" name="leaveApprover" value="{{ $admin->supervisor }}">
       @endforeach
 

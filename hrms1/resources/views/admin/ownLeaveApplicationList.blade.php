@@ -21,18 +21,18 @@
          <th>Action</th>
       </tr>
 
-      @foreach($leaveApplications as $leaveApplication)
+      @foreach($adminLeaveApplications as $adminLeaveApplication)
       <tr>
-         <td>{{ $leaveApplication->id }}</td>
-         <td>{{ $leaveApplication->leaveTypeName }}</td>
-         <td>{{ $leaveApplication->start_date }}</td>
-         <td>{{ $leaveApplication->end_date }}</td>
-         <td>{{ $leaveApplication->leaveApproverId }} {{ $leaveApplication->leaveApproverName }}</td>
-         <td>{{ $leaveApplication->status }}</td>
-         <td>{{ $leaveApplication->reason }}</td>
+         <td>{{ $adminLeaveApplication->id }}</td>
+         <td>{{ $adminLeaveApplication->leaveTypeName }}</td>
+         <td>{{ $adminLeaveApplication->start_date }}</td>
+         <td>{{ $adminLeaveApplication->end_date }}</td>
+         <td>{{ $adminLeaveApplication->leaveApproverId }} {{ $adminLeaveApplication->leaveApproverName }}</td>
+         <td>{{ $adminLeaveApplication->status }}</td>
+         <td>{{ $adminLeaveApplication->reason }}</td>
          <td>
-            @if ($leaveApplication->document != '')
-            <a href="{{ asset('documents/') }}/{{$leaveApplication->document}}" class="link" target="_blank">File</a>
+            @if ($adminLeaveApplication->document != '')
+            <a href="{{ asset('documents/') }}/{{$adminLeaveApplication->document}}" class="link" target="_blank">File</a>
             @else
             -
             @endif
@@ -40,11 +40,11 @@
          <td>
             @php
                $today=date("Y-m-d");
-               $leaveDate=$leaveApplication->start_date;
+               $leaveDate=$adminLeaveApplication->start_date;
             @endphp
 
-            @if (($today < $leaveDate) && ($leaveApplication->status !== 'Cancelled'))
-            <a href="{{ route('cancelLeave', ['adminId' => $leaveApplication->admin, 'id' => $leaveApplication->id])}}" class="btn btn-danger" onclick="return confirm('Cancel this leave application?')">Cancel</a>
+            @if (($today < $leaveDate) && ($adminLeaveApplication->status !== 'Cancelled'))
+            <a href="{{ route('cancelLeaveAdmin', ['adminId' => $adminLeaveApplication->admin, 'id' => $adminLeaveApplication->id])}}" class="btn btn-danger" onclick="return confirm('Cancel this leave application?')">Cancel</a>
             @else
             -
             @endif

@@ -94,36 +94,43 @@ Route::post('setEmployeesLeaveGrade/update',[App\Http\Controllers\LeaveGradeCont
 
 // assign admin's leave grade -----------------------------------------------------------
 Route::get('setAdminsLeaveGrade/{id}',[App\Http\Controllers\LeaveGradeController::class, 'setAdminsLeaveGradePage'])->name('setAdminsLeaveGrade');
-
 Route::post('setAdminsLeaveGrade/update',[App\Http\Controllers\LeaveGradeController::class, 'updateAdminsLeaveGrade'])->name('updateAdminsLeaveGrade');
 
 // create new employees leave record every year (manually) -----------------------------------------------------------
 Route::get('employeesLeave/createLeaveRecord',[App\Http\Controllers\EmployeeLeaveController::class, 'createLeaveRecord'])->name('createLeaveRecord');
 
-// apply leave -----------------------------------------------------------
+// apply leave (administrator)-----------------------------------------------------------
 Route::get('admin/applyLeave', [App\Http\Controllers\AdminLeaveApplicationController::class, 'showApplyLeavePage'])->name('showAdminApplyLeavePage');
 Route::post('admin/applyLeave/submit', [App\Http\Controllers\AdminLeaveApplicationController::class, 'submitApplication'])->name('submitAdminApplication');
+
+// cancel leave application -----------------------------------------------------------
+Route::get('admin/cancelLeave/{adminId}/{id}', [App\Http\Controllers\AdminLeaveApplicationController::class, 'cancel'])->name('cancelLeaveAdmin');
 
 // administrators' leave application list -----------------------------------------------------------
 Route::get('admin/adminLeaveApplicationList', [App\Http\Controllers\AdminLeaveApplicationController::class, 'showAdminLeaveApplicationList'])->name('showAdminLeaveApplicationList');
 
-// own leave application list -----------------------------------------------------------
+// administrator own leave application list -----------------------------------------------------------
 Route::get('admin/ownLeaveApplicationList', [App\Http\Controllers\AdminLeaveApplicationController::class, 'showOwnLeaveApplicationList'])->name('showAdminOwnLeaveApplicationList');
 
 // approve administrators' leave -----------------------------------------------------------
-Route::get('admin/approveAdminLeave/{adminId}/{id}', [App\Http\Controllers\AdminLeaveApplicationController::class, 'approveAdminLeave'])->name('approveAdminLeave');
+Route::get('admin/approveAdminLeave/{adminId}/{id}', [App\Http\Controllers\AdminLeaveApplicationController::class, 'approve'])->name('approveAdminLeave');
 
 // approve multiple administrators' leave -----------------------------------------------------------
-Route::get('admin/approveMultipleAdminLeave', [App\Http\Controllers\AdminLeaveApplicationController::class, 'approveMultipleAdminLeave'])->name('approveMultipleAdminLeave');
+Route::get('admin/approveMultipleAdminLeave', [App\Http\Controllers\AdminLeaveApplicationController::class, 'approveMultiple'])->name('approveMultipleAdminLeave');
 
 // reject administrators' leave -----------------------------------------------------------
-Route::get('admin/rejectAdminLeave/{adminId}/{id}', [App\Http\Controllers\AdminLeaveApplicationController::class, 'rejectAdminLeave'])->name('rejectAdminLeave');
+Route::get('admin/rejectAdminLeave/{adminId}/{id}', [App\Http\Controllers\AdminLeaveApplicationController::class, 'reject'])->name('rejectAdminLeave');
 
 // reject multiple administrators' leave -----------------------------------------------------------
-Route::get('admin/rejectMultipleAdminLeave', [App\Http\Controllers\AdminLeaveApplicationController::class, 'rejectMultipleAdminLeave'])->name('rejectMultipleAdminLeave');
+Route::get('admin/rejectMultipleAdminLeave', [App\Http\Controllers\AdminLeaveApplicationController::class, 'rejectMultiple'])->name('rejectMultipleAdminLeave');
+
+// view own leave grade -----------------------------------------------------------
+Route::get('admin/ownLeaveGrade',[App\Http\Controllers\AdminLeaveController::class, 'showAdminOwnLeave'])->name('adminOwnLeaveGrade');
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++ THE END FOR ADMINISTRATORS' ROUTES ++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++ ROUTE FOR EMPLOYEE +++++++++++++++++++++++++++++++++++++++++++++++
@@ -143,4 +150,6 @@ Route::get('employeesLeave',[App\Http\Controllers\EmployeeLeaveController::class
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++ THE END FOR EMPLOYEES' ROUTES +++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

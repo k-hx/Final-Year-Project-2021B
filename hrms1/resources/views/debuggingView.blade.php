@@ -2,6 +2,6 @@
 @section('content')
 
 <div>
-<p>Hello goodbye</p>
+<p>{{ $adminLeaveId }}</p>
 </div>
 @endsection

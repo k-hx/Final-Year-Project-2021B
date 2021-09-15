@@ -7,7 +7,9 @@ use DB;
 use App\Models\LeaveType;
 use App\Models\LeaveGrade;
 use App\Models\Employee;
+use App\Models\Admin;
 use App\Models\EmployeeLeave;
+use App\Models\AdminLeave;
 use App\Models\LeaveEntitlement;
 use Session;
 use Carbon\Carbon;
@@ -96,6 +98,58 @@ class LeaveEntitlementController extends Controller
          }
       }
 
+      //update administrator's leave ------------------------------------------------
+      //find administrators with the leave grade
+      $admins=DB::table('admins')
+      ->where('leave_grade',$r->id)
+      ->get();
+
+      //for each administrator who is assigned with the leave grade
+      foreach($admins as $admin) {
+         //find the employee with the employee id
+         $adminId=$admin->id;
+         $admin=Admin::find($adminId);
+
+         //find their related leave record (same leave type, present year)
+         $adminLeaves=DB::table('admin_leaves')
+         ->where('admin',$admin->id)
+         ->where('leave_type',$r->leaveType)
+         ->where('year',Carbon::now()->format('Y'))
+         ->get();
+
+         $number=0;
+         foreach($adminLeaves as $adminLeave) {
+            $number=$number+1;
+
+            //find the admin leave with the admin leave id
+            $adminLeaveId=$adminLeave->id;
+            $adminLeave=AdminLeave::find($adminLeaveId);
+
+            //update the record
+            $adminLeave->total_days=$r->num_of_days;
+            $remaining_days=($r->num_of_days)-($adminLeave->leaves_taken);
+            if($remaining_days<0) {
+               $remaining_days=0;
+            }
+            $adminLeave->remaining_days=$remaining_days;
+            $adminLeave->status='Valid';
+            $adminLeave->save();
+         }
+
+         if($number===0) {
+            //create admin leave record
+            $createAdminLeave=AdminLeave::create([
+               'admin'=>$admin->id,
+               'leave_type'=>$r->leaveType,
+               'total_days'=>$r->num_of_days,
+               'leaves_taken'=>0,
+               'remaining_days'=>$r->num_of_days,
+               'year'=>Carbon::now()->format('Y'),
+               'status'=>'Valid',
+            ]);
+         }
+      }
+
       Session::flash('success',"Leave entitlement added successfully!");
       return redirect()->route('leaveEntitlement', ['id' => $id]);
    }
@@ -167,6 +221,43 @@ class LeaveEntitlementController extends Controller
          }
       }
 
+      //update administrator's leave record -----------------------------------------
+      //find administrators with the leave grade
+      $admins=DB::table('admins')
+      ->where('leave_grade',$leaveGradeId)
+      ->get();
+
+      //for each employee who is assigned with the leave grade
+      foreach($admins as $admin) {
+         //find the administrator with the admin id
+         $adminId=$admin->id;
+         $admin=Admin::find($adminId);
+
+         //find their related leave record (same leave type, present year)
+         $adminLeaves=DB::table('admin_leaves')
+         ->where('admin',$admin->id)
+         ->where('leave_type',$r->leaveType)
+         ->where('year',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($adminLeaves as $adminLeave) {
+
+            //find the admin leave with the admin leave id
+            $adminLeaveId=$adminLeave->id;
+            $adminLeave=AdminLeave::find($admiinLeaveId);
+
+            //update the record
+            $adminLeave->total_days=$r->num_of_days;
+            $remaining_days=($r->num_of_days)-($adminLeave->leaves_taken);
+            if($remaining_days<0) {
+               $remaining_days=0;
+            }
+            $adminLeave->remaining_days=$remaining_days;
+            $adminLeave->status='Valid';
+            $adminLeave->save();
+         }
+      }
+
       Session::flash('success',"Leave entitlement updated successfully!");
       return redirect()->route('leaveEntitlement',['id'=>$leaveGradeId]);
    }
@@ -202,6 +293,37 @@ class LeaveEntitlementController extends Controller
             //update the record
             $employeeLeave->status='Invalid';
             $employeeLeave->save();
+         }
+      }
+
+      //update administrator's leave record -----------------------------------------
+      //find administrators with the leave grade
+      $admins=DB::table('admins')
+      ->where('leave_grade',$leaveGradeId)
+      ->get();
+
+      //for each administrator who is assigned with the leave grade
+      foreach($admins as $admin) {
+         //find the administrator with the admin id
+         $adminId=$admin->id;
+         $admin=Admin::find($adminId);
+
+         //find their related leave record (same leave type, present year)
+         $adminLeaves=DB::table('admin_leaves')
+         ->where('admin',$admin->id)
+         ->where('leave_type',$leaveEntitlements->leaveType)
+         ->where('year',Carbon::now()->format('Y'))
+         ->get();
+
+         foreach($adminLeaves as $adminLeave) {
+
+            //find the employee leave with the employee leave id
+            $adminLeaveId=$adminLeave->id;
+            $adminLeave=AdminLeave::find($adminLeaveId);
+
+            //update the record
+            $adminLeave->status='Invalid';
+            $adminLeave->save();
          }
       }
 
