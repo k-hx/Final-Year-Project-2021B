@@ -271,4 +271,38 @@ class LeaveApplicationController extends Controller
 
       return redirect()->route('showLeaveApplicationList');
    }
+
+   public function cancelMultiple() {
+      $r=request();
+
+      $leaveApplications=$r->input('leaveApplication');
+      foreach($leaveApplications as $leaveApplication => $value) {
+         $application=LeaveApplication::find($value);
+         $previousStatus=$application->status;
+         $application->status='Cancelled';
+         $application->save();
+
+         if($previousStatus = "Approved") {
+            $employeeId=$application->employee;
+            $employeeLeaves=DB::table('employee_leaves')
+            ->where('employee','=',$employeeId)
+            ->where('leave_type','=',$application->leave_type_id)
+            ->where('year','=',Carbon::now()->format('Y'))
+            ->get();
+
+            foreach($employeeLeaves as $employeeLeave) {
+               $employeeLeaveId=$employeeLeave->id;
+               $employeeLeave=EmployeeLeave::find($employeeLeaveId);
+
+               $currentLeavesTaken=$employeeLeave->leaves_taken;
+               $employeeLeave->leaves_taken=$currentLeavesTaken-($application->num_of_days);
+               $employeeLeave->remaining_days=($employeeLeave->remaining_days)+($application->num_of_days);
+               $employeeLeave->save();
+            }
+         }
+      }
+
+      Session::flash('success',"Leave application cancelled successfully!");
+      return redirect()->route('showLeaveApplicationList');
+   }
 }

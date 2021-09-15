@@ -145,6 +145,9 @@ Route::get('leaveApplicationList', [App\Http\Controllers\LeaveApplicationControl
 // cancel leave -----------------------------------------------------------
 Route::get('leaveApplication/cancel/{employeeId}/{id}', [App\Http\Controllers\LeaveApplicationController::class, 'cancel'])->name('cancelLeave');
 
+// cancel multiple leave -----------------------------------------------------------
+Route::get('cancelMultipleLeave', [App\Http\Controllers\LeaveApplicationController::class, 'cancelMultiple'])->name('cancelMultiple');
+
 // view own leave grade -----------------------------------------------------------
 Route::get('employeesLeave',[App\Http\Controllers\EmployeeLeaveController::class, 'showEmployeeOwnLeave'])->name('employeeOwnLeaveGrade');
 
