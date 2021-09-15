@@ -24,24 +24,28 @@
 <a href="{{ route('createLeaveRecord') }}" class="btn btn-primary">Refresh</a>
 
 <div>
-   <table>
-      <tr>
-         <th>ID</th>
-         <th>Employee Name</th>
-         <th>Leave Grade</th>
-         <th>Action</th>
-      </tr>
+   <table id="allEmployeesLeaveGradeTable">
+      <thead>
+         <tr>
+            <th>ID</th>
+            <th>Employee Name</th>
+            <th>Leave Grade</th>
+            <th>Action</th>
+         </tr>
+      </thead>
 
-      @foreach($employees as $employee)
-      <tr>
-         <td>{{ $employee->id }}</td>
-         <td>{{ $employee->full_name }}</td>
-         <td>{{ $employee->leave_grade }} {{ $employee->leaveGradeName }}</td>
-         <td>
-            <a href="{{ route('employeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">View/Edit Leave Information</a>
-         </td>
-      </tr>
-      @endforeach
+      <tbody>
+         @foreach($employees as $employee)
+         <tr>
+            <td>{{ $employee->id }}</td>
+            <td>{{ $employee->full_name }}</td>
+            <td>{{ $employee->leave_grade }} {{ $employee->leaveGradeName }}</td>
+            <td>
+               <a href="{{ route('employeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">View/Edit Leave Information</a>
+            </td>
+         </tr>
+         @endforeach
+      </tbody>
 
    </table>
 

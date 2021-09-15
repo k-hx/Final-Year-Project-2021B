@@ -29,31 +29,32 @@
    <p>Leave grade is not yet assigned.</p>
    @endif
 
-   <table>
-      <tr>
-         <th>Leave Type ID</th>
-         <th>Leave Type Name</th>
-         <th>Number of Days Entitled</th>
-         <th>Leaves Taken</th>
-         <th>Remaining Days</th>
-         <th>Year</th>
-         <th>Status</th>
-      </tr>
+   <table id="adminOwnLeaveGradeTable">
+      <thead>
+         <tr>
+            <th>Leave Type ID</th>
+            <th>Leave Type Name</th>
+            <th>Number of Days Entitled</th>
+            <th>Leaves Taken</th>
+            <th>Remaining Days</th>
+            <th>Year</th>
+            <th>Status</th>
+         </tr>
+      </thead>
 
-      @foreach($adminLeaves as $adminLeave)
-      <tr>
-         <td>{{ $adminLeave->leave_type }}</td>
-         <td>{{ $adminLeave->leaveTypeName }}</td>
-         <td>{{ $adminLeave->total_days }}</td>
-         <td>{{ $adminLeave->leaves_taken }}</td>
-         <td>{{ $adminLeave->remaining_days }}</td>
-         <td>{{ $adminLeave->year }}</td>
-         <td>{{ $adminLeave->status }}</td>
-      </tr>
-      @endforeach
-      <tr>
-
-      </tr>
+      <tbody>
+         @foreach($adminLeaves as $adminLeave)
+         <tr>
+            <td>{{ $adminLeave->leave_type }}</td>
+            <td>{{ $adminLeave->leaveTypeName }}</td>
+            <td>{{ $adminLeave->total_days }}</td>
+            <td>{{ $adminLeave->leaves_taken }}</td>
+            <td>{{ $adminLeave->remaining_days }}</td>
+            <td>{{ $adminLeave->year }}</td>
+            <td>{{ $adminLeave->status }}</td>
+         </tr>
+         @endforeach
+      </tbody>            
    </table>
 
    @endforeach

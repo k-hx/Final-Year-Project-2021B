@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-<link rel="stylesheet" href="{{ asset('css/style2.css') }}">
-
 @section('content')
 @if(Session::has('success'))
     <div class="alert alert-success" role="alert">
@@ -24,7 +22,7 @@
 <a href="{{ route('createLeaveRecord') }}" class="btn btn-primary">Refresh</a>
 
 <div>
-   <table>
+   <table id="allAdminsLeaveGradeTable">
       <tr>
          <th>ID</th>
          <th>Admin Name</th>

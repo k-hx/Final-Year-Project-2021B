@@ -31,31 +31,32 @@
 
    <a href="{{ route('setEmployeesLeaveGrade', ['id' => $employee->id]) }}" class="btn btn-primary">Change Leave Grade</a>
 
-   <table>
-      <tr>
-         <th>Leave Type ID</th>
-         <th>Leave Type Name</th>
-         <th>Number of Days Entitled</th>
-         <th>Leaves Taken</th>
-         <th>Remaining Days</th>
-         <th>Year</th>
-         <th>Status</th>
-      </tr>
+   <table id="employeesLeaveGradeTable">
+      <thead>
+         <tr>
+            <th>Leave Type ID</th>
+            <th>Leave Type Name</th>
+            <th>Number of Days Entitled</th>
+            <th>Leaves Taken</th>
+            <th>Remaining Days</th>
+            <th>Year</th>
+            <th>Status</th>
+         </tr>
+      </thead>
 
-      @foreach($employeeLeaves as $employeeLeave)
-      <tr>
-         <td>{{ $employeeLeave->leave_type }}</td>
-         <td>{{ $employeeLeave->leaveTypeName }}</td>
-         <td>{{ $employeeLeave->total_days }}</td>
-         <td>{{ $employeeLeave->leaves_taken }}</td>
-         <td>{{ $employeeLeave->remaining_days }}</td>
-         <td>{{ $employeeLeave->year }}</td>
-         <td>{{ $employeeLeave->status }}</td>
-      </tr>
-      @endforeach
-      <tr>
-
-      </tr>
+      <tbody>
+         @foreach($employeeLeaves as $employeeLeave)
+         <tr>
+            <td>{{ $employeeLeave->leave_type }}</td>
+            <td>{{ $employeeLeave->leaveTypeName }}</td>
+            <td>{{ $employeeLeave->total_days }}</td>
+            <td>{{ $employeeLeave->leaves_taken }}</td>
+            <td>{{ $employeeLeave->remaining_days }}</td>
+            <td>{{ $employeeLeave->year }}</td>
+            <td>{{ $employeeLeave->status }}</td>
+         </tr>
+         @endforeach
+      </tbody>         
    </table>
 
    @endforeach

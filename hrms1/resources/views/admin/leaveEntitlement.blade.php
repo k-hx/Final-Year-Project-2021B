@@ -12,25 +12,29 @@
    @foreach($leaveGrades as $leaveGrade)
    <h2>Leave Grade: {{ $leaveGrade->name }}</h2>
 
-      <table>
-         <tr>
-            <th>Leave Type ID</th>
-            <th>Leave Type Name</th>
-            <th>Number of Days Entitled</th>
-            <th>Action</th>
-         </tr>
+      <table id="leaveEntitlementTable">
+         <thead>
+            <tr>
+               <th>Leave Type ID</th>
+               <th>Leave Type Name</th>
+               <th>Number of Days Entitled</th>
+               <th>Action</th>
+            </tr>
+         </thead>
 
-         @foreach($currentEntitlements as $currentEntitlement)
-         <tr>
-            <td>{{ $currentEntitlement->leaveTypeId}}</td>
-            <td>{{ $currentEntitlement->leaveTypeName }}</td>
-            <td>{{ $currentEntitlement->num_of_days }}</td>
-            <td>
-               <a href="{{ route('editLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-warning" >Edit</a>
-               <a href="{{ route('deleteLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentEntitlement->leaveTypeName}}?')">Delete</a>
-         </td>
-         </tr>
-         @endforeach
+         <tbody>
+            @foreach($currentEntitlements as $currentEntitlement)
+            <tr>
+               <td>{{ $currentEntitlement->leaveTypeId}}</td>
+               <td>{{ $currentEntitlement->leaveTypeName }}</td>
+               <td>{{ $currentEntitlement->num_of_days }}</td>
+               <td>
+                  <a href="{{ route('editLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-warning" >Edit</a>
+                  <a href="{{ route('deleteLeaveEntitlement', ['leaveGradeId' => $leaveGrade->id,'id' => $currentEntitlement->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentEntitlement->leaveTypeName}}?')">Delete</a>
+            </td>
+            </tr>
+            @endforeach
+         </tbody>      
       </table>
 
    <br>
