@@ -30,7 +30,7 @@ class LeaveEntitlementController extends Controller
       ->orderBy('leave_types.id','asc')
       ->get();
 
-      return view('admin/leaveEntitlement')->with('leaveGrades',$leaveGrades)
+      return view('admin/leave/leaveEntitlement')->with('leaveGrades',$leaveGrades)
       ->with('currentEntitlements',$currentEntitlements)
       ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());
    }
@@ -170,7 +170,7 @@ class LeaveEntitlementController extends Controller
       ->where('leave_entitlements.id','=',$id)
       ->get();
 
-      return view('admin/editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
+      return view('admin/leave/editLeaveEntitlement')->with('leaveGrades',$leaveGrades)
       ->with('leaveEntitlements',$leaveEntitlements)
       ->with('currentEntitlements',$currentEntitlements)
       ->with('leaveTypes',DB::table('leave_types')->orderBy('name','asc')->get());

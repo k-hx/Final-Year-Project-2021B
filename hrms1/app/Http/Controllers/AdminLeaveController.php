@@ -90,7 +90,7 @@ class AdminLeaveController extends Controller
        ->where('admin_leaves.admin',$id)
        ->get();
 
-       return view('admin/adminsLeaveGrade')->with('admins',$admins)
+       return view('admin/leave/adminsLeaveGrade')->with('admins',$admins)
        ->with('adminLeaves',$adminLeaves);
     } else {
       Session::flash('danger',"The admin is not under your supervision.");
@@ -113,7 +113,7 @@ class AdminLeaveController extends Controller
      ->orderBy('leave_type','asc')
      ->get();
 
-     return view('admin/ownLeaveGrade')
+     return view('admin/leave/ownLeaveGrade')
      ->with('admins',$admins)
      ->with('adminLeaves',$adminLeaves);
   }

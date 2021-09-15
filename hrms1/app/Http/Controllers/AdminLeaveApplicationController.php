@@ -38,7 +38,7 @@ class AdminLeaveApplicationController extends Controller
       ->where('status','=','Applied')
       ->get();
 
-      return view('admin/applyLeave')->with('admins',$admins)
+      return view('admin/leave/leave/applyLeave')->with('admins',$admins)
       ->with('adminLeaves',$adminLeaves)
       ->with('adminLeaveApplications',$adminLeaveApplications);
    }
@@ -100,7 +100,7 @@ class AdminLeaveApplicationController extends Controller
       ->orderBy('id','asc')
       ->get();
 
-      return view('admin/ownLeaveApplicationList')
+      return view('admin/leave/leave/ownLeaveApplicationList')
       ->with('admins',$admins)
       ->with('adminLeaveApplications',$adminLeaveApplications);
    }
@@ -130,7 +130,7 @@ class AdminLeaveApplicationController extends Controller
       ->where('admin_leave_applications.leave_approver','=',Auth::id())
       ->get();
 
-      return view('admin/adminLeaveApplicationList')
+      return view('admin/leave/leave/adminLeaveApplicationList')
       ->with('admins',$admins)
       ->with('adminLeaveApplications',$adminLeaveApplications);
    }

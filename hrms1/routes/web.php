@@ -14,7 +14,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // create leave type -----------------------------------------------------------
 Route::get('createLeaveType', function() {
-   return view('admin/createLeaveType');
+   return view('admin/leave/createLeaveType');
 })->name('createLeaveType')->middleware('auth');
 
 Route::post('createLeaveType/store', [App\Http\Controllers\LeaveTypeController::class, 'store'])->name('addLeaveType')->middleware('auth');
@@ -31,7 +31,7 @@ Route::get('leaveType/delete/{id}', [App\Http\Controllers\LeaveTypeController::c
 
 // create leave grade -----------------------------------------------------------
 Route::get('createLeaveGrade', function() {
-   return view('admin/createLeaveGrade');
+   return view('admin/leave/createLeaveGrade');
 })->name('createLeaveGrade');
 
 Route::post('createLeaveGrade/store', [App\Http\Controllers\LeaveGradeController::class, 'store'])->name('addLeaveGrade');

@@ -33,12 +33,12 @@ class LeaveTypeController extends Controller
                      ->orderBy('id','asc')
                      ->get();
 
-      return view('admin/showLeaveTypes')->with('leaveTypes',$leaveTypes);
+      return view('admin/leave/showLeaveTypes')->with('leaveTypes',$leaveTypes);
    }
 
    public function edit($id) {
       $leaveTypes=LeaveType::all()->where('id',$id);
-      return view('admin/editLeaveType')->with('leaveTypes',$leaveTypes);
+      return view('admin/leave/editLeaveType')->with('leaveTypes',$leaveTypes);
    }
 
    public function update() {
