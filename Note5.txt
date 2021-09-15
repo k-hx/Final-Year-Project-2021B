@@ -1,0 +1,65 @@
+Restrict users' permission?
+
+Database table
+category, component, has default rows -> seeds
+
+!Calculate unpaid leaves
+
+1. Category of salary component
+2. Salary component
+3. Job title
+4. Salary structure
+5. structure_component
+6. Employee basic salary
+7. Employee salary
+8. Employee payroll
+9. Admin basic salary
+10. Admin salary
+11. Admin payroll
+12. EPF, PCB, SOCSO (skipped)
+
+*basic salary will be saved directly in employee_salary and admin_salary table for now
+
+1. Database table
+2. Model
+    -> fillable
+    -> relationship
+3. Controller
+4. Route
+5. View
+
+Seed database table
+Command:
+php artisan make:seeder LeaveTypeSeeder
+composer dump-autoload
+php artisan db:seed
+
+in DatabaseSeeder.php
+$this->call([
+      LeaveTypeSeeder::class,
+ ]);
+
+in LeaveTypeSeeder.php
+use Illuminate\Support\Facades\DB;
+
+DB::table('leave_types')->insert([
+      'name' => 'Unpaid Leave',
+       'status' => 'Added',
+       'min_num_of_days' => 0,
+]);
+
+Actions can be done
+Create salary structure
+Create salary component
+Edit salary component
+Add component to salary structure
+-> all related tables need to be modified
+Remove component from salary structure
+Assign salary structure to job title
+Change salary structure for a job title
+
+Run payroll for this month
+-> Generate payslip
+
+Employee views own payroll
+Admin views own payroll
