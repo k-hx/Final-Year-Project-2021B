@@ -30,14 +30,14 @@ class AdminLeaveApplicationController extends Controller
       ->orderBy('leave_types.name','asc')
       ->get();
 
-      $leaveApplications=DB::table('leave_applications')
+      $adminLeaveApplications=DB::table('admin_leave_applications')
       ->where('admin',Auth::id())
       ->where('status','=','Applied')
       ->get();
 
       return view('admin/applyLeave')->with('admins',$admins)
       ->with('adminLeaves',$adminLeaves)
-      ->with('leaveApplications',$leaveApplications);
+      ->with('adminLeaveApplications',$adminLeaveApplications);
    }
 
    public function submitApplication() {
@@ -50,7 +50,7 @@ class AdminLeaveApplicationController extends Controller
          $documentName='';
       }
 
-      $applyLeave=LeaveApplication::create([
+      $applyLeave=AdminLeaveApplication::create([
          'database'=>$r->form,
          'admin'=>$r->admin,
          'leave_type_id'=>$r->leaveTypeId,
@@ -70,30 +70,85 @@ class AdminLeaveApplicationController extends Controller
 
    public function showOwnLeaveApplicationList() {
       $admins=Admin::all()->where('id',Auth::id());
-      $leaveApplications=DB::table('leave_applications')
+      $adminLeaveApplications=DB::table('admin_leave_applications')
       ->get();
 
-      foreach($leaveApplications as $leaveApplication) {
-         $leaveApplication=LeaveApplication::find($leaveApplication->id);
+      foreach($adminLeaveApplications as $adminLeaveApplication) {
+         $adminLeaveApplication=AdminLeaveApplication::find($adminLeaveApplication->id);
          $today=Carbon::now();
-         $leaveApplicationDate=$leaveApplication->start_date;
-         if($today->gt($leaveApplicationDate) && ($leaveApplication->status === 'Applied')) {
-            $leaveApplication->status='Expired';
-            $leaveApplication->save();
+         $adminLeaveApplicationDate=$adminLeaveApplication->start_date;
+         if($today->gt($adminLeaveApplicationDate) && ($adminLeaveApplication->status === 'Applied')) {
+            $adminLeaveApplication->status='Expired';
+            $adminLeaveApplication->save();
          }
       }
 
-      $leaveApplications=DB::table('leave_applications')
-      ->leftjoin('leave_types','leave_types.id','=','leave_applications.leave_type_id')
-      ->leftjoin('admins','admins.id','=','leave_applications.leave_approver')
-      ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.full_name as leaveApproverName','leave_applications.*')
-      ->where('leave_applications.admin','=',Auth::id())
+      $adminLeaveApplications=DB::table('admin_leave_applications')
+      ->leftjoin('leave_types','leave_types.id','=','admin_leave_applications.leave_type_id')
+      ->leftjoin('admins','admins.id','=','admin_leave_applications.leave_approver')
+      ->select('leave_types.name as leaveTypeName','admins.id as leaveApproverId','admins.full_name as leaveApproverName','admin_leave_applications.*')
+      ->where('admin_leave_applications.admin','=',Auth::id())
       ->orderBy('id','asc')
       ->get();
 
       return view('admin/ownLeaveApplicationList')
       ->with('admins',$admins)
-      ->with('leaveApplications',$leaveApplications);
+      ->with('adminLeaveApplications',$adminLeaveApplications);
    }
+
+   public function showAdminLeaveApplicationList() {
+      $admins=Admin::all()->where('id',Auth::id());
+      $adminLeaveApplications=DB::table('admin_leave_applications')
+      ->get();
+
+      foreach($adminLeaveApplications as $adminLeaveApplication) {
+         $adminLeaveApplication=AdminLeaveApplication::find($adminLeaveApplication->id);
+         $today=Carbon::now();
+         $adminLeaveApplicationDate=$adminLeaveApplication->start_date;
+         if($today->gt($adminLeaveApplicationDate)) {
+            $adminLeaveApplication->status='Expired';
+            $adminLeaveApplication->save();
+         }
+      }
+
+      $adminLeaveApplications=DB::table('admin_leave_applications')
+      ->leftjoin('leave_types','leave_types.id','=','admin_leave_applications.leave_type_id')
+      ->leftjoin('admins','admins.id','=','leave_applications.admin')
+      ->select('leave_types.name as leaveTypeName','admins.id as adminId','admins.full_name as adminName','admin_leave_applications.*')
+      ->where('admin_leave_applications.leave_approver','=',Auth::id())
+      ->get();
+
+      return view('admin/adminLeaveApplicationList')
+      ->with('admins',$admins)
+      ->with('adminLeaveApplications',$adminLeaveApplications);
+   }
+
+   public function approve($adminId,$id) {
+      $adminLeaveApplications=AdminLeaveApplication::find($id);
+      $adminLeaveApplications->status='Approved';
+      $adminLeaveApplications->save();
+
+      //update leave taken for the employee ------------------------------------
+      $adminLeaves=DB::table('admin_leaves')
+      ->where('admin','=',$adminId)
+      ->where('leave_type','=',$adminLeaveApplications->leave_type_id)
+      ->where('year','=',Carbon::now()->format('Y'))
+      ->get();
+
+      foreach($adminLeaves as $adminLeave) {
+         $adminLeaveId=$adminLeave->id;
+         $adminLeave=AdminLeave::find($adminLeaveId);
+
+         $currentLeavesTaken=$adminLeave->leaves_taken;
+         $adminLeave->leaves_taken=$currentLeavesTaken+($adminLeaveApplications->num_of_days);
+         $adminLeave->remaining_days=($adminLeave->remaining_days)-($adminLeaveApplications->num_of_days);
+         $adminLeave->save();
+      }
+
+      Session::flash('success',"Leave application approved successfully!");
+      return redirect()->route('showAdminLeaveApplicationList');
+   }
+
+   
 
 }

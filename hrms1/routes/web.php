@@ -105,7 +105,7 @@ Route::get('admin/applyLeave', [App\Http\Controllers\AdminLeaveApplicationContro
 Route::post('admin/applyLeave/submit', [App\Http\Controllers\AdminLeaveApplicationController::class, 'submitApplication'])->name('submitAdminApplication');
 
 // administrators' leave application list -----------------------------------------------------------
-Route::get('admin/adminLeaveApplicationList', [App\Http\Controllers\AdminLeaveApplicationController::class, 'showAdminLeaveApplicationList'])->name('showLeaveApplicationListAdmin');
+Route::get('admin/adminLeaveApplicationList', [App\Http\Controllers\AdminLeaveApplicationController::class, 'showAdminLeaveApplicationList'])->name('showAdminLeaveApplicationList');
 
 // own leave application list -----------------------------------------------------------
 Route::get('admin/ownLeaveApplicationList', [App\Http\Controllers\AdminLeaveApplicationController::class, 'showOwnLeaveApplicationList'])->name('showAdminOwnLeaveApplicationList');
