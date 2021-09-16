@@ -46,7 +46,7 @@ function changeSalaryComponent() {
             <td>{{ $employeePayroll->salaryComponentName }}</td>
             <td>{{ $employeePayroll->amount }}</td>
             <td>
-               <a href="{{ route('editEmployeePayroll', ['id' => $employeePayroll->id]) }}" class="btn btn-warning" >Edit</a>
+               <a href="{{ route('showEditEmployeePayroll', ['id' => $employeePayroll->id]) }}" class="btn btn-warning" >Edit</a>
                <a href="{{ route('deleteEmployeePayroll', ['id' => $employeePayroll->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$employeePayroll->salaryComponentName}}?')">Delete</a>
             </td>
          </tr>

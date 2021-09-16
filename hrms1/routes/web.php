@@ -203,10 +203,21 @@ Route::get('deleteSalaryComponentForJobTitle/{id}', [App\Http\Controllers\TitleC
 Route::get('payroll',[App\Http\Controllers\PayrollController::class, 'showPayrollPage'])->name('showPayrollPage');
 
 // show employee payroll item page -----------------------------------------------------------
-Route::get('payroll/{id}',[App\Http\Controllers\PayrollController::class, 'showEditPayrollItemPage'])->name('showEditPayrollItemPage');
+Route::get('employeePayrollPage/{id}',[App\Http\Controllers\PayrollController::class, 'showPayrollItemPage'])->name('showEmployeePayrollPage');
+
+// add payroll item -----------------------------------------------------------
+Route::post('payroll/addPayrollItem',[App\Http\Controllers\PayrollController::class, 'addPayrollItem'])->name('addEmployeePayroll');
+
+// edit employee payroll -----------------------------------------------------------
+Route::get('editEmployeePayroll/{id}',[App\Http\Controllers\PayrollController::class, 'showEditEmployeePayroll'])->name('showEditEmployeePayroll');
+Route::post('payroll/editEmployeePayroll/update', [App\Http\Controllers\PayrollController::class, 'editEmployeePayroll'])->name('editEmployeePayroll');
+
+// delete employee payroll -----------------------------------------------------------
+Route::get('payroll/deleteEmployeePayroll/{id}', [App\Http\Controllers\PayrollController::class, 'deleteEmployeePayroll'])->name('deleteEmployeePayroll');
 
 
 // show payroll history page -----------------------------------------------------------
+
 
 // show employee payroll history page -----------------------------------------------------------
 

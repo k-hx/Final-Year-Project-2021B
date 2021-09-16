@@ -77,7 +77,7 @@ function changeSalaryComponent() {
 
       <p>
          <label for="amount">Amount (RM):</label>
-         <input type="number" name="amount" min="0" id="amount" value="" required>
+         <input type="number" name="amount" min="0" id="amount" value="{{ $titleComponent->amount }}" required>
       </p>
 
       @endforeach

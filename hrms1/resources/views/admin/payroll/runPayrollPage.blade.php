@@ -18,10 +18,10 @@
          @foreach($employees as $employee)
          <tr>
             <td>{{$employee->id}}</td>
-            <td>{{$employee->name}}</td>
-            <td>{{$employee->jobtitle}}</td>
+            <td>{{$employee->full_name}}</td>
+            <td>{{$employee->jobTitleName}}</td>
             <td>
-               <a href="{{ route('editPayrollItemForEmployee',['id' => $employee->id]) }}" class="btn btn-primary">Manage Payroll Item</a>
+               <a href="{{ route('showEmployeePayrollPage',['id' => $employee->id]) }}" class="btn btn-warning">Manage Payroll Item</a>
             </td>
          </tr>
          @endforeach
