@@ -40,9 +40,12 @@ class TitleComponentController extends Controller
 
       $categoriesOfSalaryComponent=CategoryOfSalaryComponent::all();
 
-      $salaryComponents=SalaryComponent::all();
+      $salaryComponents=DB::table('salary_components')
+      ->where('status','!=','Deleted')
+      ->orderBy('name','asc')
+      ->get();
 
-      return view('admin/payroll/showSalaryComponentForAJobTitle')
+      return view('admin/payroll/salaryComponentForAJobTitle')
       ->with('jobTitles',$jobTitles)
       ->with('currentTitleComponents',$currentTitleComponents)
       ->with('categoriesOfSalaryComponent',$categoriesOfSalaryComponent)

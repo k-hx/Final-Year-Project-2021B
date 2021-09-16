@@ -40,6 +40,7 @@
       </tbody>
    </table>
 </div>
+
 @endsection
 
 @section('script')
