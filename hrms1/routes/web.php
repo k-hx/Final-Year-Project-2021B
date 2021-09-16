@@ -175,5 +175,18 @@ Route::post('editSalaryComponent/update', [App\Http\Controllers\SalaryComponentC
 // delete salary component -----------------------------------------------------------
 Route::get('salaryComponent/delete/{id}', [App\Http\Controllers\SalaryComponentController::class, 'delete'])->name('deleteSalaryComponent');
 
+// create salary structure -----------------------------------------------------------
+Route::get('createSalaryStructure', function() {
+   return view('admin/payroll/createSalaryStructure');
+})->name('createSalaryStructure');
+
+Route::post('createSalaryStructure/store', [App\Http\Controllers\SalaryStructureController::class, 'createSalaryStructure'])->name('addSalaryStructure');
+
+// show salary component for all job title -----------------------------------------------------------
+Route::get('salaryComponentForAllJobTitle',[App\Http\Controllers\TitleComponentController::class, 'showSalaryComponentForAllJobTitle'])->name('showSalaryComponentForAllJobTitle');
+
+// show salary component for a job title -----------------------------------------------------------
+Route::get('salaryComponentForAJobTitle/{id}',[App\Http\Controllers\TitleComponentController::class, 'showSalaryComponentForAJobTitle'])->name('showSalaryComponentForAJobTitle');
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

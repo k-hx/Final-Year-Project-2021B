@@ -40,7 +40,7 @@ class LeaveGradeController extends Controller
       ->orderBy('id','asc')
       ->get();
 
-      $employees=Employee::all();
+      $employees=Employee::all();      
 
       return view('admin/leave/showLeaveGrades')->with('leaveGrades',$leaveGrades)
       ->with('employees',$employees);

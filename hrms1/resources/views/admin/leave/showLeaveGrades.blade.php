@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-<link rel="stylesheet" href="{{ asset('css/style2.css') }}">
-
 @section('content')
 @if(Session::has('success'))
 <div class="alert alert-success" role="alert">
@@ -19,6 +17,8 @@ function validate(leaveGradeId) {
       number=number+1;
    }
    @endforeach
+
+   
 
    if(number!=0) {
       alert('The leave grade is assigned to at least an employee!');
@@ -61,7 +61,7 @@ function validate(leaveGradeId) {
             </td>
          </tr>
          @endforeach
-      </tbody>   
+      </tbody>
    </table>
 </div>
 @endsection

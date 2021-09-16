@@ -18,7 +18,6 @@ class CreateJobTitlesTable extends Migration
            $table->string('job_title_name');
            $table->string('department_id');
            $table->double('rate_per_hour', 8,2);
-           $table->string('salary_structure');
            $table->timestamps();
         });
     }
