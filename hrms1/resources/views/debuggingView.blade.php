@@ -2,6 +2,8 @@
 @section('content')
 
 <div>
-<p>{{ $adminLeaveId }}</p>
+@foreach($titleComponents as $titleComponent)
+<p>{{ $titleComponent->id }}</p>
+@endforeach
 </div>
 @endsection

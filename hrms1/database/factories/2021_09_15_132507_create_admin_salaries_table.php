@@ -16,7 +16,6 @@ class CreateAdminSalariesTable extends Migration
         Schema::create('admin_salaries', function (Blueprint $table) {
             $table->id();
             $table->string('admin');
-            $table->string('category');
             $table->string('component');
             $table->double('amount');
             $table->timestamps();

@@ -188,5 +188,16 @@ Route::get('salaryComponentForAllJobTitle',[App\Http\Controllers\TitleComponentC
 // show salary component for a job title -----------------------------------------------------------
 Route::get('salaryComponentForAJobTitle/{id}',[App\Http\Controllers\TitleComponentController::class, 'showSalaryComponentForAJobTitle'])->name('showSalaryComponentForAJobTitle');
 
+// add salary component for job title -----------------------------------------------------------
+Route::post('addSalaryComponentForJobTitle', [App\Http\Controllers\TitleComponentController::class, 'addTitleComponent'])->name('addSalaryComponentForJobTitle');
+
+// edit salary component for job title -----------------------------------------------------------
+Route::get('editSalaryComponentForJobTitle/{id}',[App\Http\Controllers\TitleComponentController::class, 'showEdit'])->name('showEditSalaryComponentForJobTitle');
+
+Route::post('editSalaryComponentForJobTitle/update', [App\Http\Controllers\TitleComponentController::class, 'editTitleComponent'])->name('editSalaryComponentForJobTitle');
+
+// delete salary component for job title -----------------------------------------------------------
+Route::get('deleteSalaryComponentForJobTitle/{id}', [App\Http\Controllers\TitleComponentController::class, 'deleteTitleComponent'])->name('deleteSalaryComponentForJobTitle');
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -16,7 +16,6 @@ class CreateEmployeeSalariesTable extends Migration
         Schema::create('employee_salaries', function (Blueprint $table) {
             $table->id();
             $table->string('employee');
-            $table->string('category');
             $table->string('component');
             $table->double('amount');
             $table->timestamps();

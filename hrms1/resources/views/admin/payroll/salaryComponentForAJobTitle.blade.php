@@ -12,7 +12,7 @@ function changeSalaryComponent() {
       if(salaryComponentOptions[i].classList.contains(result)) {
          salaryComponentOptions[i].hidden = false;
       } else {
-         salaryComponentOptions[i].hidden = true;         
+         salaryComponentOptions[i].hidden = true;
       }
    }
 
@@ -37,7 +37,7 @@ function changeSalaryComponent() {
             <tr>
                <th>Salary Component ID</th>
                <th>Salary Component Name</th>
-               <th>Amount</th>
+               <th>Amount (RM)</th>
                <th>Action</th>
             </tr>
          </thead>
@@ -49,9 +49,9 @@ function changeSalaryComponent() {
                <td>{{ $currentTitleComponent->salaryComponentName }}</td>
                <td>{{ $currentTitleComponent->amount }}</td>
                <td>
-                  <a href="{{ route('editTitleComponent', ['jobTitleId' => $jobTitle->id,'id' => $currentTitleComponent->id]) }}" class="btn btn-warning" >Edit</a>
-                  <a href="{{ route('deleteTitleComponent', ['jobTitleId' => $jobTitle->id,'id' => $currentTitleComponent->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentTitleComponent->salaryComponentName}}?')">Delete</a>
-            </td>
+                  <a href="{{ route('showEditSalaryComponentForJobTitle', ['id' => $currentTitleComponent->id]) }}" class="btn btn-warning" >Edit</a>
+                  <a href="{{ route('deleteSalaryComponentForJobTitle', ['id' => $currentTitleComponent->id]) }}" class="btn btn-danger" onclick="return confirm('Delete {{$currentTitleComponent->salaryComponentName}}?')">Delete</a>
+               </td>
             </tr>
             @endforeach
          </tbody>
@@ -60,11 +60,11 @@ function changeSalaryComponent() {
    <br>
    <br>
 
-   <form action="" method="post">
+   <form action="{{ route('addSalaryComponentForJobTitle') }}" method="post">
       @csrf
-      <input type="hidden" name="id" value="{{ $jobTitle->id }}">
+      <input type="hidden" name="jobTitleId" value="{{ $jobTitle->id }}">
       <p>
-         <label for="categoryOfSalaryComponent">Select from category</label>
+         <label for="categoryOfSalaryComponent">Select from category:</label>
          <select class="form-control" id="categoryOfSalaryComponent" name="categoryOfSalaryComponent" onchange="changeSalaryComponent();">
             <option value="default">-- Select category --</option>
             @foreach($categoriesOfSalaryComponent as $category)
@@ -75,7 +75,7 @@ function changeSalaryComponent() {
 
       <p>
          <label for="salaryComponent">Salary Component: </label>
-         <select name= "salaryComponent" class="form-control">
+         <select name= "salaryComponent" class="form-control" required>
             <option value="default">-- Select salary component --</option>
             @foreach($categoriesOfSalaryComponent as $category)
                @foreach($salaryComponents as $salaryComponent)
@@ -93,11 +93,12 @@ function changeSalaryComponent() {
                   @endif
                @endforeach
             @endforeach
-
          </select>
 
          <br>
+      </p>
 
+      <p>
          <label for="amount">Amount (RM):</label>
          <input type="number" name="amount" min="0" value="" required>
       </p>

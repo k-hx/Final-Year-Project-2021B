@@ -49,7 +49,7 @@ class LeaveEntitlementController extends Controller
       //update employee's leave ------------------------------------------------
       //find employees with the leave grade
       $employees=DB::table('employees')
-      ->where('leave_grade',$r->id)
+      ->where('leave_grade',$r->id)      
       ->get();
 
       //for each employee who is assigned with the leave grade
