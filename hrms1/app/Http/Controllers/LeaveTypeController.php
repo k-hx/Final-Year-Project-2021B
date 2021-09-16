@@ -64,6 +64,7 @@ class LeaveTypeController extends Controller
          $leaveEntitlement->delete();
       }
 
+      Session::flash('success',"Leave type deleted successfully!");
       return redirect()->route('showLeaveTypes');
    }
 }

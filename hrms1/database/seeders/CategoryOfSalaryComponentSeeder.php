@@ -23,10 +23,6 @@ class CategoryOfSalaryComponentSeeder extends Seeder
       ]);
 
       DB::table('category_of_salary_components')->insert([
-          'name' => 'Other Perquisites',
-      ]);
-
-      DB::table('category_of_salary_components')->insert([
           'name' => 'Remuneration',
       ]);
 

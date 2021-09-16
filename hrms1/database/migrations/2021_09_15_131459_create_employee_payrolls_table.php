@@ -19,6 +19,7 @@ class CreateEmployeePayrollsTable extends Migration
             $table->string('category');
             $table->string('component');
             $table->double('amount');
+            $table->boolean('is_additional');
             $table->string('month');
             $table->string('year');
             $table->timestamps();

@@ -156,12 +156,24 @@ Route::get('employeesLeave',[App\Http\Controllers\EmployeeLeaveController::class
 //++++++++++++++++++++++++++++++++++++++++++++++++PAYROLL MANAGEMENT++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++ROUTE FOR ADMINISTRATORS++++++++++++++++++++++++++++++++++++++++++++
 
+// show category of salary component -----------------------------------------------------------
+Route::get('categoryOfSalaryComponent',[App\Http\Controllers\CategoryOfSalaryComponentController::class, 'show'])->name('showCategoryOfSalaryComponent');
+
 // create salary component -----------------------------------------------------------
-Route::get('admin/payroll/createSalaryComponent', function() {
-   return view('admin/payroll/createSalaryComponent');
-})->name('createSalaryComponent');
+Route::get('createSalaryComponent',[App\Http\Controllers\SalaryComponentController::class, 'showCreateSalaryComponent'])->name('showCreateSalaryComponent');
 
+Route::post('createSalaryComponent/store', [App\Http\Controllers\SalaryComponentController::class, 'createSalaryComponent'])->name('addSalaryComponent');
 
+// show salary component -----------------------------------------------------------
+Route::get('salaryComponent',[App\Http\Controllers\SalaryComponentController::class, 'showSalaryComponent'])->name('showSalaryComponent');
+
+// edit salary component -----------------------------------------------------------
+Route::get('editSalaryComponent/{id}',[App\Http\Controllers\SalaryComponentController::class, 'edit'])->name('editSalaryComponent');
+
+Route::post('editSalaryComponent/update', [App\Http\Controllers\SalaryComponentController::class, 'update'])->name('updateSalaryComponent');
+
+// delete salary component -----------------------------------------------------------
+Route::get('salaryComponent/delete/{id}', [App\Http\Controllers\SalaryComponentController::class, 'delete'])->name('deleteSalaryComponent');
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

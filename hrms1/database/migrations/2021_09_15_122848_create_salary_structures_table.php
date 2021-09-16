@@ -16,6 +16,7 @@ class CreateSalaryStructuresTable extends Migration
         Schema::create('salary_structures', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('status');
             $table->timestamps();
         });
     }

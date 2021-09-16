@@ -16,7 +16,7 @@ class CreateStructureComponentsTable extends Migration
         Schema::create('structure__components', function (Blueprint $table) {
             $table->id();
             $table->string('salary_structure');
-            $table->string('salary_component');
+            $table->string('salary_component');            
             $table->timestamps();
         });
     }

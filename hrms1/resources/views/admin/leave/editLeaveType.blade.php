@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-<link rel="stylesheet" href="{{ asset('css/style2.css') }}">
-
 @section('content')
 <div style="text-align:center">
    <form method="post" action="{{ route('updateLeaveType') }}" enctype="multipart/form-data">
@@ -23,7 +21,7 @@
       @endforeach
 
       <p>
-         <input type="submit" name="create" value="Update">
+         <input type="submit" name="update" value="Update">
       </p>
    </form>
 </div>

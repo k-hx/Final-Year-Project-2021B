@@ -17,6 +17,7 @@ class CreateSalaryComponentsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('category');
+            $table->string('status');
             $table->timestamps();
         });
     }
