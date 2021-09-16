@@ -1,5 +1,8 @@
 @extends('layouts.app')
 <script type="text/javascript">
+@foreach($titleComponents as $titleComponent)
+document.getElementById("amount").value=Math.abs({{ $titleComponent->amount }});
+@endforeach
 function changeSalaryComponent() {
    //get selected category of salary component
    var selectedCategory = document.getElementById("categoryOfSalaryComponent");
@@ -74,7 +77,7 @@ function changeSalaryComponent() {
 
       <p>
          <label for="amount">Amount (RM):</label>
-         <input type="number" name="amount" min="0" value="{{ $titleComponent->amount }}" required>
+         <input type="number" name="amount" min="0" id="amount" value="" required>
       </p>
 
       @endforeach

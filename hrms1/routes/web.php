@@ -199,5 +199,17 @@ Route::post('editSalaryComponentForJobTitle/update', [App\Http\Controllers\Title
 // delete salary component for job title -----------------------------------------------------------
 Route::get('deleteSalaryComponentForJobTitle/{id}', [App\Http\Controllers\TitleComponentController::class, 'deleteTitleComponent'])->name('deleteSalaryComponentForJobTitle');
 
+// show payroll page -----------------------------------------------------------
+Route::get('payroll',[App\Http\Controllers\PayrollController::class, 'showPayrollPage'])->name('showPayrollPage');
+
+// show employee payroll item page -----------------------------------------------------------
+Route::get('payroll/{id}',[App\Http\Controllers\PayrollController::class, 'showEditPayrollItemPage'])->name('showEditPayrollItemPage');
+
+
+// show payroll history page -----------------------------------------------------------
+
+// show employee payroll history page -----------------------------------------------------------
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -16,7 +16,6 @@ class CreateEmployeePayrollsTable extends Migration
         Schema::create('employee_payrolls', function (Blueprint $table) {
             $table->id();
             $table->string('employee');
-            $table->string('category');
             $table->string('component');
             $table->double('amount');
             $table->boolean('is_additional');

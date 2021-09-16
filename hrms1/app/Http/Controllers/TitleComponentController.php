@@ -376,8 +376,13 @@ class TitleComponentController extends Controller
          }
 
          if($isMatched == 0) {
-            
+            $createAdminSalary=AdminSalary::create([
+               'admin'=>$adminId,
+               'component'=>$r->salaryComponent,
+               'amount'=>$amount,
+            ]);
          }
       }
+      
    }
 }
