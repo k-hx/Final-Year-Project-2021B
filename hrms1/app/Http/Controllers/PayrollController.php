@@ -107,8 +107,7 @@ class PayrollController extends Controller
       $employeePayrolls=DB::table('employee_payrolls')
       ->leftjoin('employees','employees.id','employee_payrolls.employee')
       ->leftjoin('salary_components','salary_components.id','employee_payrolls.component')
-      ->leftjoin('category_of_salary_components','category_of_salary_components.id','salary_components.category')
-      ->select('employees.full_name as employeeName','employee_payrolls.*','salary_components.name as salaryComponentName','salary_components.category as salaryComponentCategory','category_of_salary_components.name as category')
+      ->select('employees.full_name as employeeName','employee_payrolls.*','salary_components.name as salaryComponentName','salary_components.category as salaryComponentCategory')
       ->where('employee_payrolls.id','=',$id)
       ->get();
 
@@ -117,10 +116,35 @@ class PayrollController extends Controller
       ->where('status','!=','Deleted')
       ->get();
 
+      $currentCategory;
+      $currentComponent;
+      foreach($employeePayrolls as $employeePayroll) {
+         $employeePayroll=EmployeePayroll::find($id);
+         $currentSalaryComponents=$employeePayroll->component;
+         $currentCategories=DB::table('category_of_salary_components')
+         ->where('id','=',$employeePayroll->component)
+         ->get();
+         $currentComponents=DB::table('salary_components')
+         ->where('id','=',$employeePayroll->component)
+         ->get();
+
+         foreach($currentCategories as $currentCategory) {
+            $currentCategory=CategoryOfSalaryComponent::find($currentCategory->id);
+            $currentCategory=$currentCategory->id;
+         }
+
+         foreach($currentComponents as $currentComponent) {
+            $currentComponent=SalaryComponent::find($currentComponent->id);
+            $currentComponent=$currentComponent->name;
+         }
+      }
+
       return view('admin/payroll/editEmployeePayroll')
       ->with('categoriesOfSalaryComponent',$categoriesOfSalaryComponent)
       ->with('salaryComponents',$salaryComponents)
-      ->with('employeePayrolls',$employeePayrolls);
+      ->with('employeePayrolls',$employeePayrolls)
+      ->with('currentCategory',$currentCategory)
+      ->with('currentComponent',$currentComponent);
    }
 
    public function editEmployeePayroll() {
@@ -128,7 +152,7 @@ class PayrollController extends Controller
 
       $employeePayroll=EmployeePayroll::find($r->id);
       $employeeId=$employeePayroll->employee;
-      $employeePayroll->component=$r->component;
+      $employeePayroll->component=$r->salaryComponent;
       $employeePayroll->amount=$r->amount;
       $employeePayroll->save();
 
